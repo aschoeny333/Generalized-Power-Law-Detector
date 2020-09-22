@@ -230,15 +230,14 @@ function [X_masked] = mask(X, sig_intervals)
                     end
                 end
 
-                % Step 3.6: Add adjusted X_sig to X_masked
+                % Add adjusted X_sig to 
                 for r_mask = 1 : rows
                     for c_mask = c : c + length(X_sig(1, :)) - 1
                         X_masked(r_mask, c_mask) = X_sig(r_mask, c_mask - c +  1);
                     end
                 end
                 
-                % Step 3.7: Increment sig_counter
-                sig_counter = sig_counter + 1;
+                sig_counter = sig
             end
         end
     end

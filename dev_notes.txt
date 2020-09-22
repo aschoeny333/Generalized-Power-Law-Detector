@@ -161,3 +161,5 @@ Another thing to program: Noise bounds? Some third eta thresholding value such t
 
 --------
 
+21sep2020
+Downloaded GitHub Desktop application to work with version control as I make structural edits to the programs.
