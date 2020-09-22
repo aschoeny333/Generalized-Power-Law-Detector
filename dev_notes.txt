@@ -1,0 +1,163 @@
+Generalized Power Law Algorithm Development Notes
+Author: Alex Schoeny
+
+8jul2020
+Downloaded and installed Matlab's signal processing package for use of the spectrogram function. Will use the package for 30 day free trial to assess efficacy of the algorithm on our data. If the algorithm performs well, options include adjusting existing free packages to our needs or paying for signal processing package will be considered.
+
+Spent time getting familiar with the spectrogram function. Noticed sample frequency input determines range of frequency ([0, sf/2]) and range of time ([0, length(sig)/sf]) axes. Consider reducing sample rate of signal to look at a more relevant frequency range. Low pass filtering may be involved, as referenced in Helble et. al
+
+Wrote an outline of comments of the full program and saved as GPL.m. Will set up directory organization to facilitate a basic GIT workflow, begin programming as next steps.
+
+--------
+
+9jul2019
+Set up Master and Development folders for use when a base program is complete and feature development becomes important, at which point git will be used for version control. Basic git functionality verified through Terminal.
+
+Began programming Step 1 of the program as defined in yesterday's outline. Determined need for signal decimation to lower sampling rate is not immediately necessary, as it is already an order of magnitude within the post-decimation rate in Helble et al.
+
+Decided to implement a Step 1.5, consisting of plotting the original specified spectrogram for ease of comparison after the completion of the algorithm.
+
+--------
+
+10jul2020
+Sent test files from boxing laptop, with details as follows
+   - test_blank: use 360-450 sec, from run1000067, some very quiet noises but mostly for testing overall whitening effect
+   - test_loud_with_pingers: use 0-90 sec, from run1000054, some loud noises and a bout of short sounds to test effect on these types of signals
+   - test_loud_clean: use 0-90 sec, from run1000070, 3 loud and clear sounds with nothing else in the background
+   - test_loud_clean_single: use 360-450 sec, from run1000021, a single loud and clear sound with nothing else in the background
+
+Implemented a first draft of the rest of the program. Based on initial performance issues may exist in implementation, adjustments may need to be made with parameters. Need to investigate the matrices that are generated further.
+
+Implemented a plotting program Plot_Data to generate spectrograms without having to re-run the entire GPL program, due to runtime considerations.
+
+--------
+
+13jul2020
+Cloned Master directory into Development directory to begin with adjustments to first draft of program. Small syntactical adjustments were made to remove bugs from the GPL program that had arisen on 10jul while running program with saved variables from work on Plot_Data. Adjusted titles of spectrogram plots to include parameter values.
+
+Initial program was run using all four testing files, and results were saved in Initial Performance directory. It appears that the whitening effect has been achieved but that the signal in question has a power closer to zero (and thus a larger negative value when 20*log10 values are plotted) compared to the background, which is the opposite of the desired performance. In some especially strong signals, this phenomenon occurs at the same time as a few (<10) cells in the spectrogram appear further from zero than the background, as desired. Numerical inspection of the matrices generating these spectrograms is necessary.
+
+Made a Google spreadsheet tracking information about .wav files used for testing, including fnam on my Mac, fnam in chaoz_runs, run number where its contents were noticed, begin time of window, end time of window, a binary variable tracking if it contains a loud and predominant signal, and the start and end times of that signal. The ability to export this as a .csv file then import into matlab will be useful for multiple-file testing. Details of each category listed on the sheet available in a comment. Screenshots of each spectrogram taken on the Lenovo as a visual reminder of their contents.
+
+Deleted test.wav from Master directory, as its information for the above categories was unknown and its contents were uninteresting for testing purposes. Changed test_loud_with_bout to test_loud_with_pingers for clarity.
+
+Initial program was run with zoomed in time and frequency bounds on the loud signal in test_loud_clean. It appears the issue with some cells appearing both significantly more and less powerful than the background was eliminated, with the cells only appearing significantly less powerful than the background. This result was saved in Initial Performance as well.
+
+Added draft of test statistic plotter to Plot_Data to mimic that of Fig 5. in Helble et. al.
+
+Next steps: determine if program is achieving correct values for mu - an improved mu may fix the opposite-power effect referenced above. Add error throwing mechanisms for incorrect input. Look into turning 
+
+--------
+
+20jul2020
+Updated goal listed in comments of GPL.m for clarity.
+
+Fixed mistyped expression for mu (currently line 64 in GPL) to divide by cols instead of rows. This leads to numerical values of mu that are much closer to the average values for each frequency bin, as they should be. Precisely, they are all slightly smaller than the average, because the expression for mu is an estimate for the mean of the peak 50% of the pdf, so mu ought to be less than the mean of the entire row due to the right skewness of the distribution.
+
+Performance after the above adjustment appears improved on one .wav file (test_loud_clean). Issue of signal being less powerful than the background is removed. Background in rows and columns containing a signal appear less powerful than other background regions on the spectrogram, consider including a minimum power parameter to remove the vertical and horizontal bars that are a result for best visual product. Test statistic plots look excellent.
+
+--------
+
+22jul2020 
+Removed factor of 20 from power argument in all spectrogram plotting commands; I found its use did not contribute any more contrast or clarity to spectrograms and it was a departure of the style used in Helble. 
+
+Added more detailed comments to Plot_Data. Committed changes from today and 20jul to git in Development directory.
+
+Created whitener.m, a function that determines the variables mu, j_star, rows, and cols. Tested and it generates the same results as before. Need to think of best approach for testing, but also can't think of a reason why the code would fail given its simplicity.
+
+Generated results of new program using other testing wav files. Results stored in Fixed Whitening Performance directory. While looking at results, noticed that, due to the fixed-column and fixed-row whitening from matrices A and B respectively, the rows and columns that include marine sounds appear quieter than other background noise. A minimum noise level threshold along with that feature may yield best visual performance
+
+--------
+
+27jul2020 
+Implemented threshold.m to take a matrix and a minimum threshold value that sets any element in the matrix below that value to the value. Added another row to Plot_Data plots to display thresholded spectrogram and corresponding test statistic plot. Results seem promising with thresh value of 10^-7 chosen arbitrarily.
+
+Issue arose with git when attempting to push to master directory - something about denial of updating a non-bare repository. I don't anticipate any major developments to the program until attempting to write the detector so will just continue coding in Development.
+
+--------
+
+28jul2020
+Brainstorming next steps:
+   - Apply program on more data, visually compare performance on different types of sounds, background environments
+   - Develop program to compare distributions of power over a given frequency before and after GPL is applied. Consider plotting both, applying some sort of curve fitting
+   - Find a way to determine optimal min noise threshold value. Add GUI component to plotting to dynamically change thresh? 
+
+--------
+
+4aug2020
+Added detailed notes and title descriptions where they were lacking before sending to Dr. Spiesberger for review. Title descriptions now all include title, author, goal descriptions, and inputs (with descriptions where necessary).
+
+Investigated curve fitting on matlab, it seems like advanced distribution curve fitting is only possible with a toolbox. Consider only looking at simple statistics of pre- and post-GPL distributions, or do advanced curve fitting in python
+
+--------
+
+10aug2020
+Included a subtraction of 1 from expression for hz_per_bin because length(freqs) included the row corresponding to a frequency of 0, making hz_per_bin slightly smaller than it should be
+
+Added specification (including variable type and size) to input descriptions and wrote output descriptions for GPL.m 
+
+--------
+
+24aug2020
+Several changes to program implementation after discussion with Dr. Spiesberger. Gave more detail to descriptions of size of input/output variables. Rewrote Plot_Data.m to be a function rather than a script. Added class and value checking of input parameters.
+
+Deleted git directories due to faulty performance referenced earlier. Will be saving copies of files to track progress until I have time to consult one of my peers about how to properly use git.
+
+--------
+
+30aug2020
+Continued making changes as per earlier discussion with Dr. Spiesberger. Rewrote filtering portion of GPL.m to have option of using bandpass filtering. Changed some variables to reflect this different filtering technique. Rewrote GPL.m to be a function rather than a script, returning structured arrays containing relevant variables defined in earlier version of the program. Changed input parameters to spectrogram function to reflect Dr. Spiesberger's recommendation.
+
+--------
+
+1sep2020
+Began process of implementing detector in a new Dev folder. Due to the iterative process involving multiple manipulations and re-calculations of mu and N involved in the detector, reorganized several parts of the program. Created check_inputs.m to reduce clutter in GPL.m, created test_stat.m to be able to re-calculate N easily in other programs outside of GPL.m. Moved all plotting processes to Plot_Data.m.
+
+Wrote first draft of detector.m. Needs far more comment documentation and likely some revision, but first successful run made it evident that the minimum of the test statistic (N_sum in Plot_Data.m) was an order of magnitude larger than eta_noise defined in Helble et al (2012). Unknown if error or reflective of difference in noise levels of our data. Correction: Used v2 = 1.
+
+--------
+
+2sep2020 
+Continuted development of detector.m. Adjusted variable use so matrices didn't need resizing, seemed to improve runtime (runtime not measured). Added step comments. Wrote signal interval combining mechanism.
+
+Wrote input_vals.m as an easy way to change and assign input variables to GPL.m
+
+Still unclear about the case before the iterative step in detector.m. Upon reflection, the case certainly must be possible, especially with different spectrogram function inputs (enough frequency bins may yield arbitrarily large minimum test statistics). May deal with this case by simply substituting the minimum test statistic value column instead of columns at random from X_s. Should discuss with Dr. Spiesberger.
+
+--------
+
+3sep2020
+Continued development of detector.m. Packaged program as a function and included it in GPL.m. Added mechanism to remove intervals shorter than t_min. Added input descriptions of t_min, other variables that had not had descriptions written in various programs.
+
+--------
+
+5sep2020
+Added signal detection vertical lines on Plot_Data.m plots.
+
+--------
+
+8sep2020
+Incorporated feedback from Dr. Spiesberger regarding dimensions and units in variable descriptions.
+
+--------
+
+10sep2020
+Began drafting templating procedure, the first step of the association procedure laid out in Helble et al. (2015).
+
+--------
+
+17sep2020 
+Last two days finished a working draft of the masking procedure. Initial plots show visually expected performance, more testing is necessary. Things that need to still be done:
+   - Much more thorough commenting documentation
+   - Testing edge cases, which could be done well with graph components.
+   - Structure programs in the best way for future use - to discuss with Dr. Spiesberger
+   - Implement associator
+
+Prediction: The performance of the complete program (with associator) will be worse on species that have some sort of constant or cyclical nature at a constant frequency band. In the test_loud_clean_single results, what appears an obviously continuous signal is detected as three units, which may cause 3 spikes in CCF's had the signal not changed frequency bands over time.
+
+I have not been able to get some help from a friend of mine on how to use GIT. Though it seems like I don't have many more programs left to code, using GIT would be very helpful if I decide to restructure these programs.
+
+Another thing to program: Noise bounds? Some third eta thresholding value such that bounds continue until 5 sec or some minimum test stat value?? Relate to nearness value for combining signal intervals
+
+--------
+
