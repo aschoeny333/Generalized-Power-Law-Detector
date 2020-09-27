@@ -170,3 +170,5 @@ Downloaded GitHub Desktop application to work with version control as I make str
 Added a .gitignore of .m~ files. Took out part of looping procedure in mask.m as separate function main_unit.m for ease of testing. Touched up some minor documentation and variable usage issues.
 
 When running and timing input_vals.m with test_loud_clean_single.wav, program took 5 minutes to run, which is almost 4 times as slow as real time.
+
+Implemented testing program test_main_unit.m for main_unit.m along with some bug fixes identified due to testing. Altered disp messages for better tracking of progression of GPL.m

@@ -71,7 +71,7 @@
 
 function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, ...
     t_bounds, pass_band, stop_band, gamma, v1, v2, eta_thresh, eta_noise, ...
-    time_intervals, X_masked)
+    time_intervals, X_masked, freq_intervals)
 
     % Unpack structured arrays
     X = original.X;
@@ -277,22 +277,30 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     
     subplot(2,1,1)
     surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
-
+    axis xy; 
+    axis tight; 
+    colormap(jet); view(0,90);
     if numel(time_intervals) == 0
         % Don't plot any time bound lines
     elseif numel(time_intervals) == 2
         xline(time_intervals(1, 1), "color", "g", "LineWidth", 2);
         xline(time_intervals(2, 1), "color", "r", "LineWidth", 2);
+        yline(freq_intervals(1, 1), "color", "g", "LineWidth", 2);
+        yline(freq_intervals(2, 1), "color", "r", "LineWidth", 2);
+%         rectangle("Position", [time_intervals(1,1), freq_intervals(1,1), ...
+%             time_intervals(2,1) - time_intervals(1,1), freq_intervals(2,1) - freq_intervals(1,1)], ...
+%             "EdgeColor", "w", "LineWidth", 3); 
     else
         for i = 1 : length(time_intervals(1, :))
             xline(time_intervals(1, i), "color", "g", "LineWidth", 2);
             xline(time_intervals(2, i), "color", "r", "LineWidth", 2);
+            yline(freq_intervals(1, i), "color", "g", "LineWidth", 2);
+            yline(freq_intervals(2, i), "color", "r", "LineWidth", 2);
+%             rectangle("Position", [time_intervals(1,i), freq_intervals(1,i), ...
+%             time_intervals(2,i) - time_intervals(1,i), freq_intervals(2,i) - freq_intervals(1,i)], ...
+%             "EdgeColor", "k", "LineWidth", 3); 
         end
     end
-    
-    axis xy; 
-    axis tight; 
-    colormap(jet); view(0,90);
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');
@@ -304,6 +312,19 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     axis xy; 
     axis tight; 
     colormap(jet); view(0,90);
+    if numel(time_intervals) == 0
+        % Don't plot any time bound lines
+    elseif numel(time_intervals) == 2
+        rectangle("Position", [time_intervals(1,1), freq_intervals(1,1), ...
+            time_intervals(2,1) - time_intervals(1,1), freq_intervals(2,1) - freq_intervals(1,1)], ...
+            "EdgeColor", "w", "LineWidth", 3); 
+    else
+        for i = 1 : length(time_intervals(1, :))
+            rectangle("Position", [time_intervals(1,i), freq_intervals(1,i), ...
+            time_intervals(2,i) - time_intervals(1,i), freq_intervals(2,i) - freq_intervals(1,i)], ...
+            "EdgeColor", "w", "LineWidth", 3); 
+        end
+    end
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');

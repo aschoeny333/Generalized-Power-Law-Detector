@@ -168,7 +168,7 @@
 %     variable assignment
     
 function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
-    X_masked] = GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, ...
+    X_masked, freq_intervals] = GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, ...
     thresh, eta_thresh, eta_noise, t_min)
     
     % Step 0: Check validity of inputs, change as necessary
@@ -261,7 +261,10 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     % Step 5: Run the masking procedure
     X_masked = mask(X, intervals.i);
     
+    bin_intervals = box_freq(X_masked, intervals.i);
+    freq_intervals = (bin_intervals * hz_per_bin) + original.f(1);
+    
     disp("Plotting Data");
     % Step 5: Generate Plot_Data plots
     Plot_Data(original, mu, N, N_thresh, t_bounds, pass_band, stop_band, ...
-        gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked);
+        gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked, freq_intervals);
