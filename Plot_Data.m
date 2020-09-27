@@ -73,8 +73,6 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     t_bounds, pass_band, stop_band, gamma, v1, v2, eta_thresh, eta_noise, ...
     time_intervals, X_masked)
 
-    disp("Starting Plot_Data.m");
-
     % Unpack structured arrays
     X = original.X;
     freqs_trimmed = original.f;

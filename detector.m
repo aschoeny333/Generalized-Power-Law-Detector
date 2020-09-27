@@ -163,8 +163,6 @@
 function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
     eta_noise, t_min, t_bounds)
 
-    disp("Starting detector.m");
-
     % Step 1: Preprocessing to determine X_s as defined on page 2691
 
     % Step 1.1 - Determine mu and N

@@ -10,10 +10,6 @@ eta_thresh = 2.62 * 10^-4;
 eta_noise = 2.07 * 10^-5;
 t_min = 0.35;
 
-start_time = cputime;
-
 [sound, filters, original, whitener_rets, matrices, X_s, intervals] = ... 
     GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, thresh, ...
     eta_thresh, eta_noise, t_min);
-
-runtime = cputime - start_time;

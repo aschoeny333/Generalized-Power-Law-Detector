@@ -167,14 +167,15 @@
 %     used anywhere except for labeling the plotted ColorBar, hence its
 %     variable assignment
     
-function [sound, filters, original, whitener_rets, matrices, X_s, intervals] = ... 
-    GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, thresh, ...
-    eta_thresh, eta_noise, t_min)
+function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
+    X_masked] = GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, ...
+    thresh, eta_thresh, eta_noise, t_min)
     
     % Step 0: Check validity of inputs, change as necessary
     check_inputs(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, thresh)
     [data, samp_rate] = audioread(fnam);
     
+    disp("Generating Fourier matrix");
     % Step 1: Generate Fourier matrix from .wav file - Details according to
     % Helble et al (2012), p. 2690
     %     Step 1.1: Read in .wav file, assign relevant time period
@@ -229,6 +230,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals] = .
     original.t = times;
     original.n = nfft_val;
 
+    disp("Determining initial test statistic");
     % Step 2: Generate matrices A, B, and N from Fourier Matrix
     %     Step 2.1: Determine conditional whitening vector mu
     [mu, j_star, rows, cols] = whitener(X);
@@ -250,13 +252,16 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals] = .
     matrices.N = N;
     matrices.Nt = N_thresh;
     
+    disp("Running the detector procedure");
     % Step 4: Run the detector
     [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, eta_noise, ...
         t_min, t_bounds);
     
+    disp("Running the masking procedure");
     % Step 5: Run the masking procedure
     X_masked = mask(X, intervals.i);
     
+    disp("Plotting Data");
     % Step 5: Generate Plot_Data plots
     Plot_Data(original, mu, N, N_thresh, t_bounds, pass_band, stop_band, ...
         gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked);
