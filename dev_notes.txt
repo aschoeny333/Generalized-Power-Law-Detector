@@ -162,4 +162,9 @@ Another thing to program: Noise bounds? Some third eta thresholding value such t
 --------
 
 21sep2020
-Downloaded GitHub Desktop application to work with version control as I make structural edits to the programs.
+Downloaded GitHub Desktop application to work with version control as I make structural edits to the programs. Completed comment documentation of mask.m
+
+--------
+
+27sep2020
+Added a .gitignore of .m~ files. Took out part of looping procedure in mask.m as separate function main_unit.m for ease of testing

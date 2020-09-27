@@ -1,4 +1,4 @@
-fnam = "test_blank.wav";
+fnam = "test_loud_clean_single.wav";
 pass_band = [150 1800];
 stop_band = [100 1850];
 t_bounds = [360 450];
