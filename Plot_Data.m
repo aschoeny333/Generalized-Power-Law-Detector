@@ -48,6 +48,11 @@
 %     sections IIIB-D in Helble et al. Exact value given in Section IV
 %     (2.07 * 10^-5) p.2690. Used here to draw threshold lines on test
 %     statistic plots
+%
+%     X_masked - Double matrix of size m x n as describd in the note above;
+%     Values are from X that lie within the bounds of a detected signal,
+%     are above the threshold mu_0, and in the largest connected component
+%     of the matrix adjacency graph of kept values
 % 
 % Outputs
 % 

@@ -138,6 +138,11 @@
 %         described in note above; cells are either identical to N or equal
 %         to thresh if the corresponding value in N was less than thresh
 %
+%     X_masked - Double matrix of size m x n as describd in the note above;
+%     Values are from X that lie within the bounds of a detected signal,
+%     are above the threshold mu_0, and in the largest connected component
+%     of the matrix adjacency graph of kept values
+%
 % Other Variables
 %     
 %     data_filtered - Double array of size samp_rate * bounds_len; result
