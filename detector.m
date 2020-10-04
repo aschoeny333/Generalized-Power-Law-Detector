@@ -233,9 +233,15 @@ function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
             % Identify time bounds of signal 
             while cur_test_stat(max_ind - dif_ind_below) > eta_noise
                 dif_ind_below = dif_ind_below + 1;
+                if max_ind - dif_ind_below == 1
+                    break
+                end
             end
             while cur_test_stat(max_ind + dif_ind_above) > eta_noise
                 dif_ind_above = dif_ind_above + 1;
+                if max_ind + dif_ind_above == cols
+                    break
+                end
             end
 
             % Assign signal bound indeces based on dif_ind variables

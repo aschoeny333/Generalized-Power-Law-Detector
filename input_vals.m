@@ -7,10 +7,10 @@
 % line for re-plotting data is also included
 
 % Definte input parameters
-fnam = "test_loud_clean_single.wav";
+fnam = "test_loud_clean.wav";
 pass_band = [150 1800];
 stop_band = [100 1850];
-t_bounds = [0 100];
+t_bounds = [0 150];
 gamma = 1;
 v1 = 1;
 v2 = 2;
