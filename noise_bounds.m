@@ -31,43 +31,59 @@
 %     time = end time, start time < 0, end time > time series length),
 %     t_bounds is set to [0, time series length]
 % 
-%     max_length - 1 x 1 double, value in seconds that the length of the
+%     max_noise_dur - 1 x 1 double, value in seconds that the length of the
 %     noise bounds cannot exceed
 %  
 % Outputs 
-%     noise_intervals - Double matrix of size 2 x k, where each column is
-%     of the form [start; end], where start and end define the beginning
-%     and ending time bins of the signal and associated noise contained in
-%     X_masked. Useful as input to associator
-% 
+%     noise_intervals - Structured array with fields b, t defined as
+%     follows:
+%         b - Variable name: bin_intervals. Double matrix of size 2 x k,
+%         where each column is of the form [start; end], where start and
+%         end define the beginning and ending time bins (column values) of
+%         the signal and associated noise contained in X_masked. Useful as
+%         input to associator 
+%
+%         t - No variable name, defined directly from bin_intervals. Double
+%         matrix of size 2 x k, where each column is of the form [start;
+%         end], where start and end define the beginning and ending time in
+%         seconds of the signal and associated noise contained in X_masked.
+%         Useful as input to associator and Plot_Data.m
+    
 function [noise_intervals] = noise_bounds(sig_intervals, test_stat, cols, ...
-    noise_thresh, t_bounds, max_length)
+    noise_thresh, t_bounds, max_noise_dur)
     bins_per_sec = cols / (t_bounds(2) - t_bounds(1));
-    noise_intervals = zeros(size(sig_intervals));
+    bin_intervals = zeros(size(sig_intervals));
     if ~isempty(sig_intervals)
         for i = 1:length(sig_intervals(1, :))
             dif_ind_below = 0;
             dif_ind_above = 0;
-            while test_stat(sig_intervals(1, i) - dif_ind_below) > noise_thresh
-                if dif_ind_below == max_length * bins_per_sec
+            while test_stat(sig_intervals(1, i) - dif_ind_below) < noise_thresh
+                if dif_ind_below > max_noise_dur * bins_per_sec
+                    disp("Max length reached");
                     break
                 end
                 dif_ind_below = dif_ind_below + 1;
                 if sig_intervals(1, i) - dif_ind_below == 1
+                    disp("End of matrix reached");
                     break
                 end
             end
-            while test_stat(sig_intervals(2,i) + dif_ind_above) > noise_thresh
-                if dif_ind_above == max_length * bins_per_sec
+            while test_stat(sig_intervals(2,i) + dif_ind_above) < noise_thresh
+                if dif_ind_above > max_noise_dur * bins_per_sec
+                    disp("Max length reached");
                     break
                 end
                 dif_ind_above = dif_ind_above + 1;
                 if sig_intervals(2, i) + dif_ind_above == cols
+                    disp("End of matrix reached");
                     break
                 end
             end
-            noise_intervals(:, i) = [sig_intervals(1, i) - dif_ind_below; ...
+            bin_intervals(:, i) = [sig_intervals(1, i) - dif_ind_below; ...
                 sig_intervals(2, i) + dif_ind_above];
         end
     end
+    
+    noise_intervals.b = bin_intervals;
+    noise_intervals.t = bin_intervals / bins_per_sec + t_bounds(1);
 end

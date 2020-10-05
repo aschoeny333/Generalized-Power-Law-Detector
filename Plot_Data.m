@@ -53,6 +53,11 @@
 %     Values are from X that lie within the bounds of a detected signal,
 %     are above the threshold mu_0, and in the largest connected component
 %     of the matrix adjacency graph of kept values
+%
+%     noise_intervals - Double matrix of size 2 x k, where each column is
+%     of the form [start; end], where start and end define the beginning
+%     and ending time bins of the signal and associated noise contained in
+%     X_masked. Useful as input to associator
 % 
 % Outputs
 % 
@@ -76,7 +81,7 @@
 
 function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, ...
     t_bounds, pass_band, stop_band, gamma, v1, v2, eta_thresh, eta_noise, ...
-    time_intervals, X_masked, freq_intervals)
+    time_intervals, X_masked, freq_intervals, noise_intervals)
 
     % Unpack structured arrays
     X = original.X;
@@ -290,8 +295,10 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     elseif numel(time_intervals) == 2
         xline(time_intervals(1, 1), "color", "g", "LineWidth", 2);
         xline(time_intervals(2, 1), "color", "r", "LineWidth", 2);
-        yline(freq_intervals(1, 1), "color", "g", "LineWidth", 2);
-        yline(freq_intervals(2, 1), "color", "r", "LineWidth", 2);
+        xline(noise_intervals(1, 1), "color", "k", "LineWidth", 2);
+        xline(noise_intervals(2, 1), "color", "w", "LineWidth", 2);
+%         yline(freq_intervals(1, 1), "color", "g", "LineWidth", 2);
+%         yline(freq_intervals(2, 1), "color", "r", "LineWidth", 2);
 %         rectangle("Position", [time_intervals(1,1), freq_intervals(1,1), ...
 %             time_intervals(2,1) - time_intervals(1,1), freq_intervals(2,1) - freq_intervals(1,1)], ...
 %             "EdgeColor", "w", "LineWidth", 3); 
@@ -299,8 +306,10 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
         for i = 1 : length(time_intervals(1, :))
             xline(time_intervals(1, i), "color", "g", "LineWidth", 2);
             xline(time_intervals(2, i), "color", "r", "LineWidth", 2);
-            yline(freq_intervals(1, i), "color", "g", "LineWidth", 2);
-            yline(freq_intervals(2, i), "color", "r", "LineWidth", 2);
+            xline(noise_intervals(1, i), "color", "k", "LineWidth", 2);
+            xline(noise_intervals(2, i), "color", "w", "LineWidth", 2);
+%             yline(freq_intervals(1, i), "color", "g", "LineWidth", 2);
+%             yline(freq_intervals(2, i), "color", "r", "LineWidth", 2);
 %             rectangle("Position", [time_intervals(1,i), freq_intervals(1,i), ...
 %             time_intervals(2,i) - time_intervals(1,i), freq_intervals(2,i) - freq_intervals(1,i)], ...
 %             "EdgeColor", "k", "LineWidth", 3); 

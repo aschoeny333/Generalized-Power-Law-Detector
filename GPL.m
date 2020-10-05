@@ -57,6 +57,13 @@
 %     imply a signal does not exist in that time bin. Derived largely in
 %     sections IIIB-D in Helble et al. Exact value given in Section IV
 %     (2.07 * 10^-5), Helble et al. (2012) p. 2690
+%
+%     noise_thresh - 1 x 1 double, value of test statistic above which
+%     noise interval iteration procedure stops. Not referenced in either
+%     Helble paper, but consider using eta_noise
+%
+%     max_noise_dur - 1 x 1 double, value in seconds that the length of the
+%     noise bounds cannot exceed
 %    
 % Outputs
 %
@@ -174,7 +181,7 @@
     
 function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     X_masked, freq_intervals] = GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, ...
-    thresh, eta_thresh, eta_noise, t_min)
+    thresh, eta_thresh, eta_noise, t_min, noise_thresh, max_noise_dur)
     
     % Step 0: Check validity of inputs, change as necessary
     check_inputs(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, thresh)
@@ -269,7 +276,12 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     bin_intervals = box_freq(X_masked, intervals.i);
     freq_intervals = (bin_intervals * hz_per_bin) + original.f(1);
     
+    % Step 6: Determine noise bounds
+    noise_intervals = noise_bounds(intervals.i, sum(N), cols, noise_thresh, ...
+        t_bounds, max_noise_dur);
+    
     disp("Plotting Data");
-    % Step 5: Generate Plot_Data plots
+    % Step 7: Generate Plot_Data plots
     Plot_Data(original, mu, N, N_thresh, t_bounds, pass_band, stop_band, ...
-        gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked, freq_intervals);
+        gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked, ...
+        freq_intervals, noise_intervals.t);

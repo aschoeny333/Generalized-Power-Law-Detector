@@ -176,5 +176,19 @@ Implemented testing program test_main_unit.m for main_unit.m along with some bug
 --------
 
 30sep2020
-
 Added comments to testing program. Something to consider: including an input value to detector.m to choose whether to recalculate test statistic value, because it is a massive drain on runtime and was motivate it for frequently-repeating signals.
+
+--------
+
+4oct2020
+Drafted noise_bounds.m to determine noise bounds as used in Spiesberger's associator. Needs testing and documentation.
+
+--------
+
+5oct2020
+Added component to Plot_Data.m to plot vertical lines of noise bounds as determined by noise_bounds.m. Plotting revealed a few minor bugs that were fixed. Documentation for the program added.
+
+
+
+
+
