@@ -51,39 +51,80 @@
     
 function [noise_intervals] = noise_bounds(sig_intervals, test_stat, cols, ...
     noise_thresh, t_bounds, max_noise_dur)
+
     bins_per_sec = cols / (t_bounds(2) - t_bounds(1));
     bin_intervals = zeros(size(sig_intervals));
+    num_sigs = length(sig_intervals(1, :));
+    
     if ~isempty(sig_intervals)
-        for i = 1:length(sig_intervals(1, :))
+        for i = 1:num_sigs
+            
+            % Define iteration variables
             dif_ind_below = 0;
             dif_ind_above = 0;
+            
+            % Determine if there is a previous signal and if so assign
+            % prev_sig to its bin value. If not, assign it to the beginning
+            % of the matrix
+            if i - 1 > 0
+                prev_sig = sig_intervals(2, i - 1);
+            else 
+                prev_sig = 1;
+            end
+            
+            % Determine if there is a next signal and if so assign next_sig
+            % to its bin value. If not, assign it to the end of the matrix
+            if i + 1 <= num_sigs
+                next_sig = sig_intervals(1, i + 1);
+            else 
+                next_sig = cols;
+            end
+            
+            % Iterate backwards from the start of the signal
             while test_stat(sig_intervals(1, i) - dif_ind_below) < noise_thresh
+                % Check if noise bounds are too long yet
                 if dif_ind_below > max_noise_dur * bins_per_sec
                     disp("Max length reached");
                     break
                 end
-                dif_ind_below = dif_ind_below + 1;
-                if sig_intervals(1, i) - dif_ind_below == 1
-                    disp("End of matrix reached");
+                
+                % Check if noise bounds encroaching on previous signal or
+                % end of matrix reached
+                if sig_intervals(1, i) - dif_ind_below == prev_sig
+                    disp("Previous signal or end of matrix reached");
                     break
                 end
+                
+                % Increment dif_ind_below to continue iteration
+                dif_ind_below = dif_ind_below + 1;
             end
+            
+            % Iterate forwards from the end of the signal
             while test_stat(sig_intervals(2,i) + dif_ind_above) < noise_thresh
+                % Check if noise bounds are too long yet
                 if dif_ind_above > max_noise_dur * bins_per_sec
                     disp("Max length reached");
                     break
                 end
-                dif_ind_above = dif_ind_above + 1;
-                if sig_intervals(2, i) + dif_ind_above == cols
-                    disp("End of matrix reached");
+                
+                % Check if noise bounds encroaching on next signal or end
+                % of matrix reached
+                if sig_intervals(2, i) + dif_ind_above == next_sig
+                    disp("Next signal  or end of matrix reached");
                     break
                 end
+         
+                % Increment dif_ind_above to continue iteration
+                dif_ind_above = dif_ind_above + 1;
             end
+            
+            % Append noise bounds to return variable
             bin_intervals(:, i) = [sig_intervals(1, i) - dif_ind_below; ...
                 sig_intervals(2, i) + dif_ind_above];
         end
     end
     
+    % Assign fields of return variable
     noise_intervals.b = bin_intervals;
     noise_intervals.t = bin_intervals / bins_per_sec + t_bounds(1);
 end

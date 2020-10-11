@@ -224,7 +224,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     nfft_val = 2 ^ nextpow2(0.05 * samp_rate);
     [fourier, freqs, times] = spectrogram(data_filtered, nfft_val, 0.75 * nfft_val, ...
         nfft_val, samp_rate, "yaxis");
-    %     
+         
     %     Step 1.4: Crop Fourier matrix to pass_band
     hz_per_bin = samp_rate / (2 * (length(freqs) - 1)); % Clarification: range of frequencies is samp_rate / 2
     trim_rows = round(pass_band / hz_per_bin); 

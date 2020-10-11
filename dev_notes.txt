@@ -189,6 +189,14 @@ Drafted noise_bounds.m to determine noise bounds as used in Spiesberger's associ
 Added component to Plot_Data.m to plot vertical lines of noise bounds as determined by noise_bounds.m. Plotting revealed a few minor bugs that were fixed. Documentation for the program added.
 
 
+--------
 
+8oct2020
+Applied for Penn Water Center grant. Consider looking into Research Square as platform for review of potential future manuscript before submission to journal
 
+--------
 
+10oct2020
+Added documentation to noise_bounds.m and changed procedure according to feedback from Dr. Spiesberger, so as to prevent noise bounds encroaching on the bounds of a nearby signal. Changed colors of bound lines plotted in Plot_Data.m to incorporate feedback from both Dr. Spiesberger and Dr. Kroll.
+
+Note on plotting feedback - consider alternating colors for each signal so as to distinguish potentially overlapping noise bounds. Alternatively, just choose an example where it is immediately obvious which signals a given noise bound is related to.

@@ -293,10 +293,10 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     if numel(time_intervals) == 0
         % Don't plot any time bound lines
     elseif numel(time_intervals) == 2
-        xline(time_intervals(1, 1), "color", "g", "LineWidth", 2);
+        xline(time_intervals(1, 1), "color", "r", "LineWidth", 2);
         xline(time_intervals(2, 1), "color", "r", "LineWidth", 2);
         xline(noise_intervals(1, 1), "color", "k", "LineWidth", 2);
-        xline(noise_intervals(2, 1), "color", "w", "LineWidth", 2);
+        xline(noise_intervals(2, 1), "color", "k", "LineWidth", 2);
 %         yline(freq_intervals(1, 1), "color", "g", "LineWidth", 2);
 %         yline(freq_intervals(2, 1), "color", "r", "LineWidth", 2);
 %         rectangle("Position", [time_intervals(1,1), freq_intervals(1,1), ...
@@ -304,10 +304,10 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
 %             "EdgeColor", "w", "LineWidth", 3); 
     else
         for i = 1 : length(time_intervals(1, :))
-            xline(time_intervals(1, i), "color", "g", "LineWidth", 2);
+            xline(time_intervals(1, i), "color", "r", "LineWidth", 2);
             xline(time_intervals(2, i), "color", "r", "LineWidth", 2);
             xline(noise_intervals(1, i), "color", "k", "LineWidth", 2);
-            xline(noise_intervals(2, i), "color", "w", "LineWidth", 2);
+            xline(noise_intervals(2, i), "color", "k", "LineWidth", 2);
 %             yline(freq_intervals(1, i), "color", "g", "LineWidth", 2);
 %             yline(freq_intervals(2, i), "color", "r", "LineWidth", 2);
 %             rectangle("Position", [time_intervals(1,i), freq_intervals(1,i), ...
@@ -319,7 +319,7 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     c = colorbar;
     ylabel('Frequency(HZ)');
     ylabel(c, "Power");
-    title('Spectrogram Before any Manipulation, with Detection Windows');
+    title('Spectrogram Before any Manipulation, with Detection Windows in Red and Noise Windows in Black');
 
     subplot(2,1,2)
     surf(times + t_bounds(1), freqs_trimmed, X_masked, 'EdgeColor', 'none');
@@ -343,7 +343,7 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     c = colorbar;
     ylabel('Frequency(HZ)');
     ylabel(c, "Power");
-    title('Spectrogram After GPL, Detector, and Masking Procedure');
+    title('Spectrogram After GPL, Detector, and Masking Procedure, Showing Only the Main Spectral Content Units');
 
     
     
