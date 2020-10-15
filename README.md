@@ -15,4 +15,5 @@ Detailed development records can be read in dev_notes.txt. As of 14 October 2020
 Matlab, including the Signal Processing Toolbox
 
 ## Example Figures
-![Figure 1][https://imgur.com/ngf3Apl]
+![Figure 1](https://i.imgur.com/ngf3Apl.png)
+Figure 1: Upper plot shows spectrogram before manipulation with noise and detected signal bounds overlaid. Lower plot shows spectrogram after main spectral content unit of the signal masked onto zero spectrogram with time and frequency bounds overlaid in a different style. 
