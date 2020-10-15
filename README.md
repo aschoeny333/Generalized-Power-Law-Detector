@@ -15,4 +15,4 @@ Detailed development records can be read in dev_notes.txt. As of 14 October 2020
 Matlab, including the Signal Processing Toolbox
 
 ## Example Figures
-![][/tlwp_masked.png]
+![Figure 1][https://imgur.com/ngf3Apl]
