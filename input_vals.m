@@ -7,10 +7,10 @@
 % line for re-plotting data is also included
 
 % Definte input parameters
-fnam = "test_several_signals.wav";
+fnam = "test_several_signals2.wav";
 pass_band = [150 1800];
 stop_band = [100 1850];
-t_bounds = [320 380];
+t_bounds = [0 90];
 gamma = 1;
 v1 = 1;
 v2 = 2;

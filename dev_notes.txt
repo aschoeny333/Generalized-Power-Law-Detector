@@ -200,3 +200,18 @@ Applied for Penn Water Center grant. Consider looking into Research Square as pl
 Added documentation to noise_bounds.m and changed procedure according to feedback from Dr. Spiesberger, so as to prevent noise bounds encroaching on the bounds of a nearby signal. Changed colors of bound lines plotted in Plot_Data.m to incorporate feedback from both Dr. Spiesberger and Dr. Kroll.
 
 Note on plotting feedback - consider alternating colors for each signal so as to distinguish potentially overlapping noise bounds. Alternatively, just choose an example where it is immediately obvious which signals a given noise bound is related to.
+
+--------
+
+14oct2020
+Wrote first draft of README on Github - useful for sharing project in the future.
+
+--------
+
+16oct2020
+Tried a new .wav file for testing and found bug in detector, now fixed.
+
+
+
+
+
