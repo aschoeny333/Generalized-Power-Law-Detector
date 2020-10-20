@@ -39,12 +39,6 @@
 %     v2 - 1 x 1 Double, exponential parameter applied to B to determine N
 %     (e.g. 2)as defined in Helble et al. (2012) equation 6, p. 2685
 % 
-%     thresh - 1 x 1 Double, minimum power threshold of final spectrogram.
-%     Not to be confused with eta_thresh of Helble et al (2012) (e.g.
-%     10^-7). Used to create 4th row of Plot_Data.m figure. Value
-%     determined by trial and error. Motivation of threshold.m will be
-%     better satisfied by templating procedure
-% 
 %     eta_thresh - 1 x 1 Double, minimum test statistic threshold a signal
 %     must reach in at least one time bin in order to be identified by
 %     detector.m. Derived largely in sections IIIB-D in Helble et al.
@@ -140,10 +134,6 @@
 %         
 %         N - Variable name: N. Double matrix of size m x n as described in
 %         note above; defined by eq 6 in Helble et al (2012) p. 2685
-%         
-%         Nt - Variable name: N_thresh. Double matrix of size m x n as
-%         described in note above; cells are either identical to N or equal
-%         to thresh if the corresponding value in N was less than thresh
 %
 %     X_masked - Double matrix of size m x n as describd in the note above;
 %     Values are from X that lie within the bounds of a detected signal,
@@ -181,7 +171,7 @@
     
 function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     X_masked, freq_intervals] = GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, ...
-    thresh, eta_thresh, eta_noise, t_min, noise_thresh, max_noise_dur)
+    eta_thresh, eta_noise, t_min, noise_thresh, max_noise_dur)
     
     % Step 0: Check validity of inputs, change as necessary
     check_inputs(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, thresh)
@@ -255,14 +245,9 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     % A is fixed-column whitening, B is fixed-row whitening
     [A, B, N] = test_stat(X, mu, gamma, v1, v2);
 
-    % Step 3: Clean up spectrogram with a minimum noise threshold - to be
-    % replaced by masking procedure
-    N_thresh = threshold(N, thresh);
-
     matrices.A = A;
     matrices.B = B;
     matrices.N = N;
-    matrices.Nt = N_thresh;
     
     disp("Running the detector procedure");
     % Step 4: Run the detector
@@ -282,6 +267,5 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     
     disp("Plotting Data");
     % Step 7: Generate Plot_Data plots
-    Plot_Data(original, mu, N, N_thresh, t_bounds, pass_band, stop_band, ...
-        gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked, ...
-        freq_intervals, noise_intervals.t);
+    Plot_Data(original, mu, N, t_bounds, pass_band, stop_band, gamma, v1, ...
+        v2, eta_thresh, eta_noise, intervals.t, X_masked, freq_intervals, noise_intervals.t);

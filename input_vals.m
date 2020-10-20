@@ -14,7 +14,6 @@ t_bounds = [0 90];
 gamma = 1;
 v1 = 1;
 v2 = 2;
-thresh = 10^-8;
 eta_thresh = 2.62 * 10^-4;
 eta_noise = 2.07 * 10^-5;
 t_min = 0.35;
@@ -23,8 +22,8 @@ max_noise_dur = 5;
 
 % Run GPL.m and save results
 [sound, filters, original, whitener_rets, matrices, X_s, intervals, X_masked, freq_intervals] = ... 
-    GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, thresh, ...
-    eta_thresh, eta_noise, t_min, noise_thresh, max_noise_dur);
+    GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, eta_thresh, ...
+    eta_noise, t_min, noise_thresh, max_noise_dur);
 
 
 %  Copy the below if re-plotting is necessary, namely with some changes to

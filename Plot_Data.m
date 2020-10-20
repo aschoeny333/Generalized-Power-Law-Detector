@@ -30,10 +30,6 @@
 %
 %     N - Double matrix of size m x n as described in note above; defined
 %     by eq 6 in Helble et al (2012) p.2685
-%     
-%     N_thresh - Double matrix of size m' x n as described in note above;
-%     cells are either identical to N or equal to thresh if the
-%     corresponding value in N was less than thresh
 %
 %     eta_thresh - 1 x 1 Double, minimum test statistic threshold a signal
 %     must reach in at least one time bin in order to be identified by
@@ -72,10 +68,6 @@
 %     N_sum - Double row vector of size n as described in X note above;
 %     test statistic for spectrogram after GPL defined by eq 6 in Helble et
 %     al (2012) p.2685
-% 
-%     Nt_sum - Double row vector of size n as described in X note above;
-%     test statistic for spectrogram after GPL and thresholding defined by
-%     eq 6 in Helble et al (2012) p.2685
 
 % Plotting original spectrogram
 
@@ -132,7 +124,7 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    subplot(4,2,1);
+    subplot(3,2,1);
     surf(times + t_bounds(1), freqs_trimmed, log10(X), 'EdgeColor', 'none'); 
     axis xy; 
     axis tight; 
@@ -144,7 +136,7 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     title('Original Spectrogram');
 
     % Test statistic for original spectrogram
-    subplot(4,2,2);
+    subplot(3,2,2);
     X_sum = sum(X .^ 2);
     plot(times + t_bounds(1), X_sum);
     yline(eta_thresh, "b");
@@ -155,7 +147,7 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Plotting conditionally whitened spectrogram (Original minus mu)
-    subplot(4,2,3);
+    subplot(3,2,3);
     surf(times + t_bounds(1), freqs_trimmed, log10(abs(X - mu)), 'EdgeColor', 'none'); 
     axis xy; 
     axis tight; 
@@ -167,7 +159,7 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     title('Spectrogram After Conditional Whitening');
 
     % Test statistic for original spectrogram
-    subplot(4,2,4);
+    subplot(3,2,4);
     Xw_sum = sum((X-mu) .^ 2);
     plot(times + t_bounds(1), Xw_sum);
     yline(eta_thresh, "b");
@@ -178,7 +170,7 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Plotting spectrogram after GPL
-    subplot(4,2,5);
+    subplot(3,2,5);
     surf(times + t_bounds(1), freqs_trimmed, log10(N), 'EdgeColor', 'none');
     axis xy; 
     axis tight; 
@@ -190,7 +182,7 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     title('Spectrogram After GPL Applied');
 
     % Plotting T^g, the test statistic defined in Helble et al
-    subplot(4,2,6);
+    subplot(3,2,6);
     N_sum = sum(N);
     plot(times + t_bounds(1), N_sum * 1000);
     yline(eta_thresh * 1000, "b");
@@ -198,29 +190,6 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     xlabel("(Time (secs)");
     ylabel("T^g(X) \times 10^3");
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    % Plotting spectrogram after GPL and thresholding
-    subplot(4,2,7);
-    surf(times + t_bounds(1), freqs_trimmed, log10(N_thresh), 'EdgeColor', 'none'); 
-    axis xy; 
-    axis tight; 
-    colormap(jet); view(0,90);
-    xlabel('Time (secs)');
-    c = colorbar;
-    ylabel('Frequency(HZ)');
-    ylabel(c, "Power");
-    title("Spectrogram After GPL Applied and Thresholding");
-
-    % Plotting T^g, the test statistic defined in Helble et al
-    subplot(4,2,8);
-    Nt_sum = sum(N_thresh);
-    plot(times + t_bounds(1), N_sum * 1000);
-    yline(eta_thresh * 1000, "b");
-    yline(eta_noise * 1000, "k");
-    xlabel("(Time (secs)");
-    ylabel("T^g(X)' \times 10^3");
-    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
