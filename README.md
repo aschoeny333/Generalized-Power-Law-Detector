@@ -1,5 +1,5 @@
 # Generalized Power Law Detector
-Software package for the detection and association of marine mammal calls in acoustic data
+Software package for the detection and association of marine mammal calls in acoustic data. Project still in process, expect changes in coming weeks.
 
 ## Usage
 Documentation describing the purpose, inputs, and outputs are included in the comments at the beginning of each Matlab function. The script input_vals.m allows for adjustment of input parameters and storage of outputs for each execution of GPL.m. 
