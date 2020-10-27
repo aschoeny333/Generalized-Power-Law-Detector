@@ -17,3 +17,7 @@ Matlab, including the Signal Processing Toolbox
 ## Example Figures
 ![Figure 1](https://i.imgur.com/ngf3Apl.png)
 Figure 1: Upper plot shows spectrogram before manipulation with noise and detected signal bounds overlaid. Lower plot shows spectrogram after main spectral content unit of the signal masked onto zero spectrogram with time and frequency bounds overlaid in a different style. Notice that the suggested threshold values did not lead to the detection of the long, faint signal visible here, indicating that the choice of values may be geared more towards minimizing false positive than minimizing false negative detections than is desired in certain applications. Notice also that the vertical streaks from 80-85 sec are not detected as signals due to the minimum signal duration threshold parameter t_min.
+
+## Software Flowchart
+![Figure 2](https://imgur.com/a/PDs0Hol)
+Figure 2: Flowchart depicting all programs and primary data structures
