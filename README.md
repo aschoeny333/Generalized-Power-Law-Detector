@@ -1,5 +1,5 @@
 # Generalized Power Law Detector
-Software package for the detection and association of marine mammal calls in acoustic data
+Software package for the detection and association of marine mammal calls in acoustic data. Project still in process, expect changes in coming weeks.
 
 ## Usage
 Documentation describing the purpose, inputs, and outputs are included in the comments at the beginning of each Matlab function. The script input_vals.m allows for adjustment of input parameters and storage of outputs for each execution of GPL.m. 
@@ -17,3 +17,7 @@ Matlab, including the Signal Processing Toolbox
 ## Example Figures
 ![Figure 1](https://i.imgur.com/ngf3Apl.png)
 Figure 1: Upper plot shows spectrogram before manipulation with noise and detected signal bounds overlaid. Lower plot shows spectrogram after main spectral content unit of the signal masked onto zero spectrogram with time and frequency bounds overlaid in a different style. Notice that the suggested threshold values did not lead to the detection of the long, faint signal visible here, indicating that the choice of values may be geared more towards minimizing false positive than minimizing false negative detections than is desired in certain applications. Notice also that the vertical streaks from 80-85 sec are not detected as signals due to the minimum signal duration threshold parameter t_min.
+
+## Software Flowchart
+![Imgur Image](https://i.imgur.com/t337Fk4.png)
+Figure 2: Flowchart depicting all programs and primary data structures
