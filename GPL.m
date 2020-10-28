@@ -13,7 +13,7 @@
 % 
 % Inputs:
 % 
-%     fnam - String, .wav file name (e.g. "test.wav")
+%     fnam - String, .wav file name (e.g. 'test.wav')
 % 
 %     pass_band - 1 x 2 Double array, Min/max passband frequencies (Hz).
 %     Minimum in pass_band(1). For a lowpass filter, set pass_band(1)=0. If
@@ -157,7 +157,7 @@
 %     corresponding to each row of fourier. Values in Hz
 %     
 %     hz_per_bin - 1 x 1 Double, difference between adjacent values in
-%     freqs, used to "trim" freqs and fourier according to stop_band
+%     freqs, used to 'trim' freqs and fourier according to stop_band
 %     
 %     trim_rows - 1 x 2 Double array, row numbers of freqs/fourier
 %     corresponding to stop_band     
@@ -170,14 +170,14 @@
 %     variable assignment
     
 function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
-    X_masked, freq_intervals] = GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, ...
-    eta_thresh, eta_noise, t_min, noise_thresh, max_noise_dur)
+    X_masked, freq_intervals_sec] = GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, ...
+    eta_thresh, eta_noise, t_min, noise_thresh, max_noise_dur, min_noise_dur)
     
     % Step 0: Check validity of inputs, change as necessary
     check_inputs(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, thresh)
     [data, samp_rate] = audioread(fnam);
     
-    disp("Generating Fourier matrix");
+    disp('Generating Fourier matrix');
     % Step 1: Generate Fourier matrix from .wav file - Details according to
     % Helble et al (2012), p. 2690
     %     Step 1.1: Read in .wav file, assign relevant time period
@@ -213,7 +213,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     %     Spiesberger
     nfft_val = 2 ^ nextpow2(0.05 * samp_rate);
     [fourier, freqs, times] = spectrogram(data_filtered, nfft_val, 0.75 * nfft_val, ...
-        nfft_val, samp_rate, "yaxis");
+        nfft_val, samp_rate, 'yaxis');
          
     %     Step 1.4: Crop Fourier matrix to pass_band
     hz_per_bin = samp_rate / (2 * (length(freqs) - 1)); % Clarification: range of frequencies is samp_rate / 2
@@ -232,7 +232,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     original.t = times;
     original.n = nfft_val;
 
-    disp("Determining initial test statistic");
+    disp('Determining initial test statistic');
     % Step 2: Generate matrices A, B, and N from Fourier Matrix
     %     Step 2.1: Determine conditional whitening vector mu
     [mu, j_star, rows, cols] = whitener(X);
@@ -249,23 +249,46 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     matrices.B = B;
     matrices.N = N;
     
-    disp("Running the detector procedure");
-    % Step 4: Run the detector
+    disp('Running the detector procedure');
+    % Step 3: Run the detector
     [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, eta_noise, ...
         t_min, t_bounds);
     
-    disp("Running the masking procedure");
-    % Step 5: Run the masking procedure
+    disp('Running the masking procedure');
+    % Step 4: Run the masking procedure
     X_masked = mask(X, intervals.i);
     
-    bin_intervals = box_freq(X_masked, intervals.i);
-    freq_intervals = (bin_intervals * hz_per_bin) + original.f(1);
+    freq_intervals = box_freq(X_masked, intervals.i);
+    freq_intervals_sec = (freq_intervals * hz_per_bin) + original.f(1);
     
-    % Step 6: Determine noise bounds
+    % Step 5: Determine noise bounds
     noise_intervals = noise_bounds(intervals.i, sum(N), cols, noise_thresh, ...
-        t_bounds, max_noise_dur);
+        t_bounds, max_noise_dur, min_noise_dur);
     
-    disp("Plotting Data");
-    % Step 7: Generate Plot_Data plots
+    disp('Plotting Data');
+    % Step 6: Generate Plot_Data plots
     Plot_Data(original, mu, N, t_bounds, pass_band, stop_band, gamma, v1, ...
-        v2, eta_thresh, eta_noise, intervals.t, X_masked, freq_intervals, noise_intervals.t);
+        v2, eta_thresh, eta_noise, intervals.t, X_masked, freq_intervals_sec, noise_intervals.t);
+    
+    % Step 8: Save results as structured array in the form required for
+    % data formatting program
+    
+    % Draft for creating the structured array - Will need to move to after
+    % the associator program because data will need information from all
+    % receivers
+    data.Array = fnam(6);
+    data.SoundID = "Unclear what Sound ID is referring to";
+    data.numReceivers = 5;
+    data.fs_mult = 2;
+    data.FreqBounds = freq_intervals_sec(:, 1);
+    data.Max_Duration = 60; % For more specific value for a given species, see GPL Google Sheet
+    data.nrec_sf = [1 2 3 4 5];
+    
+    
+    
+    
+    
+    
+    
+    
+    

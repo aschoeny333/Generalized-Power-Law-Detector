@@ -212,6 +212,20 @@ Wrote first draft of README on Github - useful for sharing project in the future
 Tried a new .wav file for testing and found bug in detector, now fixed.
 
 
+--------
+
+20oct2020
+Started flowchart graphic to include on Github project. Removed everything related to threshold.m, since it was made redundant with the development of the masking procedure.
+
+--------
+
+26oct2020
+Completed flowchart graph. Slightly incomplete - waiting to include associator.
+
+--------
+
+27oct2020
+Wrote draft of suggested rule to ensure noise_bounds return bin intervals that give at least one second of total of the noise sample; if the thresholded regions are too short, they are extended by looping over possible extensions and selecting the optimum one according to a modifiable criteria. Not a trivial looping procedure, definitely need to test.
 
 
 

@@ -206,7 +206,7 @@ function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
     cols_s = length(X_s(:, 1));
     if cols_s == 0
         % What to do here? is this case possible?
-        disp("X_s is empty. Unknown how to handle this case.");
+        disp('X_s is empty. Unknown how to handle this case.');
     else
         % Declare return variable 
         signal_intervals = zeros(2, cols);
@@ -228,14 +228,14 @@ function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
         while max_ts > eta_thresh
             % Display alert that the loop has restarted. Useful for
             % understanding timing of program execution
-            disp("another max found");
+            disp('another max found');
 
             % Identify time bounds of signal 
             if max_ind ~= 1
                 while cur_test_stat(max_ind - dif_ind_below) > eta_noise
                     dif_ind_below = dif_ind_below + 1;
                     if max_ind - dif_ind_below == 1
-                        disp("breaking");
+                        disp('breaking');
                         break
                     end
                 end
@@ -244,7 +244,7 @@ function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
                 while cur_test_stat(max_ind + dif_ind_above) > eta_noise
                     dif_ind_above = dif_ind_above + 1;
                     if max_ind + dif_ind_above == cols
-                        disp("breaking");
+                        disp('breaking');
                         break
                     end
                 end

@@ -73,7 +73,7 @@
 
 function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, ...
     t_bounds, pass_band, stop_band, gamma, v1, v2, eta_thresh, eta_noise, ...
-    time_intervals, X_masked, freq_intervals, noise_intervals)
+    time_intervals, X_masked, freq_intervals_sec, noise_intervals)
 
     % Unpack structured arrays
     X = original.X;
@@ -90,12 +90,12 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');
-    ylabel(c, "Power");
-    title("Original Spectrogram: pass_band = [" + num2str(pass_band(1)) + ... 
-        ", " + num2str(pass_band(2)) + "], stop_band = [" + num2str(stop_band(1)) + ...
-        ", " + num2str(stop_band(2)) + "], (\gamma, v_1, v_2) = (" + ...
-        num2str(gamma) + ", " + num2str(v1) + ", " + num2str(v2) + ...
-        "), power as log10(X)");
+    ylabel(c, 'Power');
+    title('Original Spectrogram: pass_band = [' + num2str(pass_band(1)) + ... 
+        ', ' + num2str(pass_band(2)) + '], stop_band = [' + num2str(stop_band(1)) + ...
+        ', ' + num2str(stop_band(2)) + '], (\gamma, v_1, v_2) = (' + ...
+        num2str(gamma) + ', ' + num2str(v1) + ', ' + num2str(v2) + ...
+        '), power as log10(X)');
     
     %    Second subplot: Modified (N) Spectrogram
         subplot(2,1,2);
@@ -106,12 +106,12 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');
-    ylabel(c, "Power");
-    title("Spectrogram After GPL Applied: pass_band = [" + num2str(pass_band(1)) + ... 
-        ", " + num2str(pass_band(2)) + "], stop_band = [" + num2str(stop_band(1)) + ...
-        ", " + num2str(stop_band(2)) + "], (\gamma, v_1, v_2) = (" + ...
-        num2str(gamma) + ", " + num2str(v1) + ", " + num2str(v2) + ...
-        "), power as log10(X)");
+    ylabel(c, 'Power');
+    title('Spectrogram After GPL Applied: pass_band = [' + num2str(pass_band(1)) + ... 
+        ', ' + num2str(pass_band(2)) + '], stop_band = [' + num2str(stop_band(1)) + ...
+        ', ' + num2str(stop_band(2)) + '], (\gamma, v_1, v_2) = (' + ...
+        num2str(gamma) + ', ' + num2str(v1) + ', ' + num2str(v2) + ...
+        '), power as log10(X)');
     
     % Plot developments of spectrograms in the style of Helble et al.
     % (2012) figure 5
@@ -132,17 +132,17 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');
-    ylabel(c, "Power");
+    ylabel(c, 'Power');
     title('Original Spectrogram');
 
     % Test statistic for original spectrogram
     subplot(3,2,2);
     X_sum = sum(X .^ 2);
     plot(times + t_bounds(1), X_sum);
-    yline(eta_thresh, "b");
-    yline(eta_noise, "k");
-    xlabel("(Time (secs)");
-    ylabel("\Sigma |X|^2");
+    yline(eta_thresh, 'b');
+    yline(eta_noise, 'k');
+    xlabel('(Time (secs)');
+    ylabel('\Sigma |X|^2');
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -155,17 +155,17 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');
-    ylabel(c, "Power");
+    ylabel(c, 'Power');
     title('Spectrogram After Conditional Whitening');
 
     % Test statistic for original spectrogram
     subplot(3,2,4);
     Xw_sum = sum((X-mu) .^ 2);
     plot(times + t_bounds(1), Xw_sum);
-    yline(eta_thresh, "b");
-    yline(eta_noise, "k");
-    xlabel("(Time (secs)");
-    ylabel("\Sigma |X_w|^2");
+    yline(eta_thresh, 'b');
+    yline(eta_noise, 'k');
+    xlabel('(Time (secs)');
+    ylabel('\Sigma |X_w|^2');
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -178,17 +178,17 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');
-    ylabel(c, "Power");
+    ylabel(c, 'Power');
     title('Spectrogram After GPL Applied');
 
     % Plotting T^g, the test statistic defined in Helble et al
     subplot(3,2,6);
     N_sum = sum(N);
     plot(times + t_bounds(1), N_sum * 1000);
-    yline(eta_thresh * 1000, "b");
-    yline(eta_noise * 1000, "k");
-    xlabel("(Time (secs)");
-    ylabel("T^g(X) \times 10^3");
+    yline(eta_thresh * 1000, 'b');
+    yline(eta_noise * 1000, 'k');
+    xlabel('(Time (secs)');
+    ylabel('T^g(X) \times 10^3');
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
@@ -205,12 +205,12 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     if numel(time_intervals) == 0
         % Don't plot any time bound lines
     elseif numel(time_intervals) == 2
-        xline(time_intervals(1, 1), "color", "w", "LineWidth", 5);
-        xline(time_intervals(2, 1), "color", "w", "LineWidth", 5);
+        xline(time_intervals(1, 1), 'color', 'w', 'LineWidth', 5);
+        xline(time_intervals(2, 1), 'color', 'w', 'LineWidth', 5);
     else
         for i = 1 : length(time_intervals(1, :))
-            xline(time_intervals(1, i), "color", "w", "LineWidth", 5);
-            xline(time_intervals(2, i), "color", "w", "LineWidth", 5);
+            xline(time_intervals(1, i), 'color', 'w', 'LineWidth', 5);
+            xline(time_intervals(2, i), 'color', 'w', 'LineWidth', 5);
         end
     end
     axis xy; 
@@ -219,7 +219,7 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');
-    ylabel(c, "Power");
+    ylabel(c, 'Power');
     title('Spectrogram After GPL Applied With Bounds Determined By Detector');
 
     % Plotting T^g, the test statistic defined in Helble et al
@@ -230,19 +230,19 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     if numel(time_intervals) == 0
         % Don't plot any time bound lines
     elseif numel(time_intervals) == 2
-        xline(time_intervals(1, 1), "color", "g", "LineWidth", 5);
-        xline(time_intervals(2, 1), "color", "r", "LineWidth", 5);
+        xline(time_intervals(1, 1), 'color', 'g', 'LineWidth', 5);
+        xline(time_intervals(2, 1), 'color', 'r', 'LineWidth', 5);
     else
         for i = 1 : length(time_intervals(1, :))
-            xline(time_intervals(1, i), "color", "g", "LineWidth", 5);
-            xline(time_intervals(2, i), "color", "r", "LineWidth", 5);
+            xline(time_intervals(1, i), 'color', 'g', 'LineWidth', 5);
+            xline(time_intervals(2, i), 'color', 'r', 'LineWidth', 5);
         end
     end
-    yline(eta_thresh * 1000, "b");
-    yline(eta_noise * 1000, "k");
-    xlabel("(Time (secs)");
-    ylabel("T^g(X) \times 10^3");
-    title("Test Statistic vs. Time With Bounds Determined By Detector");
+    yline(eta_thresh * 1000, 'b');
+    yline(eta_noise * 1000, 'k');
+    xlabel('(Time (secs)');
+    ylabel('T^g(X) \times 10^3');
+    title('Test Statistic vs. Time With Bounds Determined By Detector');
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
@@ -262,32 +262,32 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     if numel(time_intervals) == 0
         % Don't plot any time bound lines
     elseif numel(time_intervals) == 2
-        xline(time_intervals(1, 1), "color", "r", "LineWidth", 2);
-        xline(time_intervals(2, 1), "color", "r", "LineWidth", 2);
-        xline(noise_intervals(1, 1), "color", "k", "LineWidth", 2);
-        xline(noise_intervals(2, 1), "color", "k", "LineWidth", 2);
-%         yline(freq_intervals(1, 1), "color", "g", "LineWidth", 2);
-%         yline(freq_intervals(2, 1), "color", "r", "LineWidth", 2);
-%         rectangle("Position", [time_intervals(1,1), freq_intervals(1,1), ...
+        xline(time_intervals(1, 1), 'color', 'r', 'LineWidth', 2);
+        xline(time_intervals(2, 1), 'color', 'r', 'LineWidth', 2);
+        xline(noise_intervals(1, 1), 'color', 'k', 'LineWidth', 2);
+        xline(noise_intervals(2, 1), 'color', 'k', 'LineWidth', 2);
+%         yline(freq_intervals(1, 1), 'color', 'g', 'LineWidth', 2);
+%         yline(freq_intervals(2, 1), 'color', 'r', 'LineWidth', 2);
+%         rectangle('Position', [time_intervals(1,1), freq_intervals(1,1), ...
 %             time_intervals(2,1) - time_intervals(1,1), freq_intervals(2,1) - freq_intervals(1,1)], ...
-%             "EdgeColor", "w", "LineWidth", 3); 
+%             'EdgeColor', 'w', 'LineWidth', 3); 
     else
         for i = 1 : length(time_intervals(1, :))
-            xline(time_intervals(1, i), "color", "r", "LineWidth", 2);
-            xline(time_intervals(2, i), "color", "r", "LineWidth", 2);
-            xline(noise_intervals(1, i), "color", "k", "LineWidth", 2);
-            xline(noise_intervals(2, i), "color", "k", "LineWidth", 2);
-%             yline(freq_intervals(1, i), "color", "g", "LineWidth", 2);
-%             yline(freq_intervals(2, i), "color", "r", "LineWidth", 2);
-%             rectangle("Position", [time_intervals(1,i), freq_intervals(1,i), ...
+            xline(time_intervals(1, i), 'color', 'r', 'LineWidth', 2);
+            xline(time_intervals(2, i), 'color', 'r', 'LineWidth', 2);
+            xline(noise_intervals(1, i), 'color', 'k', 'LineWidth', 2);
+            xline(noise_intervals(2, i), 'color', 'k', 'LineWidth', 2);
+%             yline(freq_intervals(1, i), 'color', 'g', 'LineWidth', 2);
+%             yline(freq_intervals(2, i), 'color', 'r', 'LineWidth', 2);
+%             rectangle('Position', [time_intervals(1,i), freq_intervals(1,i), ...
 %             time_intervals(2,i) - time_intervals(1,i), freq_intervals(2,i) - freq_intervals(1,i)], ...
-%             "EdgeColor", "k", "LineWidth", 3); 
+%             'EdgeColor', 'k', 'LineWidth', 3); 
         end
     end
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');
-    ylabel(c, "Power");
+    ylabel(c, 'Power');
     title('Spectrogram Before any Manipulation, with Detection Windows in Red and Noise Windows in Black');
 
     subplot(2,1,2)
@@ -298,20 +298,20 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, N_thresh, .
     if numel(time_intervals) == 0
         % Don't plot any time bound lines
     elseif numel(time_intervals) == 2
-        rectangle("Position", [time_intervals(1,1), freq_intervals(1,1), ...
-            time_intervals(2,1) - time_intervals(1,1), freq_intervals(2,1) - freq_intervals(1,1)], ...
-            "EdgeColor", "w", "LineWidth", 3); 
+        rectangle('Position', [time_intervals(1,1), freq_intervals_sec(1,1), ...
+            time_intervals(2,1) - time_intervals(1,1), freq_intervals_sec(2,1) - freq_intervals_sec(1,1)], ...
+            'EdgeColor', 'w', 'LineWidth', 3); 
     else
         for i = 1 : length(time_intervals(1, :))
-            rectangle("Position", [time_intervals(1,i), freq_intervals(1,i), ...
-            time_intervals(2,i) - time_intervals(1,i), freq_intervals(2,i) - freq_intervals(1,i)], ...
-            "EdgeColor", "w", "LineWidth", 3); 
+            rectangle('Position', [time_intervals(1,i), freq_intervals_sec(1,i), ...
+            time_intervals(2,i) - time_intervals(1,i), freq_intervals_sec(2,i) - freq_intervals_sec(1,i)], ...
+            'EdgeColor', 'w', 'LineWidth', 3); 
         end
     end
     xlabel('Time (secs)');
     c = colorbar;
     ylabel('Frequency(HZ)');
-    ylabel(c, "Power");
+    ylabel(c, 'Power');
     title('Spectrogram After GPL, Detector, and Masking Procedure, Showing Only the Main Spectral Content Units');
 
     

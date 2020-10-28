@@ -7,7 +7,7 @@
 % line for re-plotting data is also included
 
 % Definte input parameters
-fnam = "test_several_signals2.wav";
+fnam = 'test_several_signals2.wav';
 pass_band = [150 1800];
 stop_band = [100 1850];
 t_bounds = [0 90];
@@ -19,11 +19,12 @@ eta_noise = 2.07 * 10^-5;
 t_min = 0.35;
 noise_thresh = eta_thresh / 2;
 max_noise_dur = 5;
+min_noise_dur = 1;
 
 % Run GPL.m and save results
 [sound, filters, original, whitener_rets, matrices, X_s, intervals, X_masked, freq_intervals] = ... 
     GPL(fnam, pass_band, stop_band, t_bounds, gamma, v1, v2, eta_thresh, ...
-    eta_noise, t_min, noise_thresh, max_noise_dur);
+    eta_noise, t_min, noise_thresh, max_noise_dur, min_noise_dur);
 
 
 %  Copy the below if re-plotting is necessary, namely with some changes to
@@ -32,3 +33,5 @@ max_noise_dur = 5;
 %  Plot_Data(original, whitener_rets.m, matrices.N, matrices.Nt, t_bounds, pass_band, stop_band, ...
 %         gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked, ...
 %         freq_intervals, noise_intervals);
+
+

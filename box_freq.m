@@ -21,9 +21,9 @@
 %     ending frequency bins of the signal contained in X_masked. Useful as
 %     input to associator
 % 
-function [bin_intervals] = box_freq(X_masked, sig_intervals)
+function [freq_intervals] = box_freq(X_masked, sig_intervals)
     rows = length(X_masked(:, 1));
-    bin_intervals = zeros(size(sig_intervals));
+    freq_intervals = zeros(size(sig_intervals));
     if ~isempty(sig_intervals)
         for i = 1:length(sig_intervals(1, :))
             min_freq = rows + 1;
@@ -41,7 +41,7 @@ function [bin_intervals] = box_freq(X_masked, sig_intervals)
                     end
                 end
             end
-            bin_intervals(:, i) = [min_freq; max_freq];
+            freq_intervals(:, i) = [min_freq; max_freq];
         end
     end
 end

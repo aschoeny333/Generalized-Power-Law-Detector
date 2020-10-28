@@ -50,7 +50,7 @@
 %         Useful as input to associator and Plot_Data.m
     
 function [noise_intervals] = noise_bounds(sig_intervals, test_stat, cols, ...
-    noise_thresh, t_bounds, max_noise_dur)
+    noise_thresh, t_bounds, max_noise_dur, min_noise_dur)
 
     bins_per_sec = cols / (t_bounds(2) - t_bounds(1));
     bin_intervals = zeros(size(sig_intervals));
@@ -84,14 +84,14 @@ function [noise_intervals] = noise_bounds(sig_intervals, test_stat, cols, ...
             while test_stat(sig_intervals(1, i) - dif_ind_below) < noise_thresh
                 % Check if noise bounds are too long yet
                 if dif_ind_below > max_noise_dur * bins_per_sec
-                    disp("Max length reached");
+                    disp('Max length reached');
                     break
                 end
                 
                 % Check if noise bounds encroaching on previous signal or
                 % end of matrix reached
                 if sig_intervals(1, i) - dif_ind_below == prev_sig
-                    disp("Previous signal or end of matrix reached");
+                    disp('Previous signal or end of matrix reached');
                     break
                 end
                 
@@ -103,24 +103,62 @@ function [noise_intervals] = noise_bounds(sig_intervals, test_stat, cols, ...
             while test_stat(sig_intervals(2,i) + dif_ind_above) < noise_thresh
                 % Check if noise bounds are too long yet
                 if dif_ind_above > max_noise_dur * bins_per_sec
-                    disp("Max length reached");
+                    disp('Max length reached');
                     break
                 end
                 
                 % Check if noise bounds encroaching on next signal or end
                 % of matrix reached
                 if sig_intervals(2, i) + dif_ind_above == next_sig
-                    disp("Next signal  or end of matrix reached");
+                    disp('Next signal  or end of matrix reached');
                     break
                 end
          
                 % Increment dif_ind_above to continue iteration
                 dif_ind_above = dif_ind_above + 1;
             end
+            % Case: If duration of combined noise regions is less than
+            % min_noise_dur, determine remaining duration, iterate through
+            % b + 1 possible selections (where b is bins equiv to necessary
+            % duration) of noise region, determine min f(b-region_i), set
+            % as new bin_intervals entry
             
-            % Append noise bounds to return variable
-            bin_intervals(:, i) = [sig_intervals(1, i) - dif_ind_below; ...
-                sig_intervals(2, i) + dif_ind_above];
+            % DISCUSS: Optimum function to evaluate optimum x_test (sum,
+            % max, etc.)
+            
+            if (dif_ind_below + dif_ind_above) < min_noise_dur * bins_per_sec
+                % CHECK some of these might have decimals, screwing things
+                % up?
+                dur_remaining = min_noise_dur * bins_per_sec - (dif_ind_below + dif_ind_above);
+                optimum_bound = 0;
+                optimum_bound_val = 10^5;
+                for x = 0:dur_remaining
+                    x_test = 0;
+                    for y = 0:(dur_remaining - x)
+                        x_test = x_test + test_stat(sig_intervals(1, i) - ...
+                            dif_ind_below - dur_remaining + x + y);
+                    end
+                    if x > 0
+                        for y = 1:x
+                            x_test = x_test + test_stat(sig_intervals(2, i) + ...
+                            dif_ind_above + y);
+                        end
+                    end
+                    if x_test < optimum_bound_val
+                        optimum_bound = x;
+                    end
+                end
+                
+                % Append optimally extended noise bounds to return variable 
+                bin_intervals(:, i) = [sig_intervals(1, i) - dif_ind_below - ...
+                    dur_remaining + optimum_bound; sig_intervals(2, i) + ...
+                    dif_ind_above + optimum_bound];
+            else
+                % Append noise bounds to return variable
+                bin_intervals(:, i) = [sig_intervals(1, i) - dif_ind_below; ...
+                    sig_intervals(2, i) + dif_ind_above];
+            end
+
         end
     end
     
