@@ -270,7 +270,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     Plot_Data(original, mu, N, t_bounds, pass_band, stop_band, gamma, v1, ...
         v2, eta_thresh, eta_noise, intervals.t, X_masked, freq_intervals_sec, noise_intervals.t);
     
-    % Step 8: Save results as structured array in the form required for
+    % Step 7: Save results as structured array in the form required for
     % data formatting program
     
     % Draft for creating the structured array - Will need to move to after
