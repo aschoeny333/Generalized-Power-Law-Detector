@@ -129,7 +129,8 @@ function [noise_intervals] = noise_bounds(sig_intervals, test_stat, cols, ...
             if (dif_ind_below + dif_ind_above) < min_noise_dur * bins_per_sec
                 % CHECK some of these might have decimals, screwing things
                 % up?
-                dur_remaining = min_noise_dur * bins_per_sec - (dif_ind_below + dif_ind_above);
+                dur_remaining = round(min_noise_dur * bins_per_sec - ...
+                    (dif_ind_below + dif_ind_above));
                 optimum_bound = 0;
                 optimum_bound_val = 10^5;
                 for x = 0:dur_remaining

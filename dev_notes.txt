@@ -227,5 +227,15 @@ Completed flowchart graph. Slightly incomplete - waiting to include associator.
 27oct2020
 Wrote draft of suggested rule to ensure noise_bounds return bin intervals that give at least one second of total of the noise sample; if the thresholded regions are too short, they are extended by looping over possible extensions and selecting the optimum one according to a modifiable criteria. Not a trivial looping procedure, definitely need to test.
 
+--------
+
+16nov2020
+Have been sloppy about updating this file in recent weeks. A summary of major updates since 27oct:
+- Drafted associator.m, including options for one of or both of 1D (time series-wise) and 2D (matrix-wise) correlation. Also drafted possible_range.m, which identified the time interval on another receiver to correlate a detected signal on the reference receiver against. Both yet to be tested/debugged
+- Wrote save_detections.m, which iterates through .wav files in a designated directory, runs the detector on each and saves the results(time, frequency, and noise bounds for each detection) as well as all input parameters (so that results can be reverse-engineered, in a sense).
+- Bugs came up while testing the above programs which were fixed, namely some improper usage of strings vs. char arrays, not returning changed values in check_inputs.m.
+- Above programs required changing of directories, which was incorporated into the code where relevant
+
+
 
 

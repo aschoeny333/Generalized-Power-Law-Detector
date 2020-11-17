@@ -1,10 +1,10 @@
 % Associator program Draft
 
 % Inputs
-%     rec_dict_matrices - Matrix acting as a "dictionary" associating
+%     rec_dict_matrices - Matrix acting as a 'dictionary' associating
 %     receiver number and its masked spectrogram
 %
-%     rec_dict_tseries - Matrix acting as a "dictionary" associating
+%     rec_dict_tseries - Matrix acting as a 'dictionary' associating
 %     receiver number and its original time series (trimmed acording to
 %     t_bounds)
 %

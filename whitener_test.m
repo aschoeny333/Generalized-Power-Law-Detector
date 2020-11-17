@@ -25,9 +25,9 @@ ray_x = linspace(0, 10, 250);
 rayleigh = 4*ray_x/pi .* exp(-2*ray_x .^ 2 / pi);
 
 figure; 
-histogram(abs(Xk), 200, "FaceColor", "b", "Normalization", "pdf"); hold;
+histogram(abs(Xk), 200, 'FaceColor', 'b', 'Normalization', 'pdf'); hold;
 plot(ray_x, rayleigh); 
-title("Comparing pdf of random variable X_k to predicted Rayleigh distribution with mean \surd\pi/2");
+title('Comparing pdf of random variable X_k to predicted Rayleigh distribution with mean \surd\pi/2');
 
 [mu, j_star, rows, cols] = whitener(abs(X_test));
 Z = (abs(X_test) - mu) .^ 6;

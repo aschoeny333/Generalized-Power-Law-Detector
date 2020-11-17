@@ -46,7 +46,7 @@ function [mu, j_star, rows, cols] = whitener(X)
     % is rounded up or down; rounding down here
     dif_ind = fix(cols / 2) - 1; 
     S = sort(X, 2);
-    % Initializing j_star and mu to be "filled in" during matix iteration
+    % Initializing j_star and mu to be 'filled in' during matix iteration
     j_star = zeros(rows, 1);
     mu = zeros(rows, 1);
     % Iterating through matrix rows

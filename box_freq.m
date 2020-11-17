@@ -16,7 +16,7 @@
 %     combining and time comparison steps
 %  
 % Outputs 
-%     sig_intervals - Double matrix of size 2 x k, where each column is of
+%     freq_intervals - Double matrix of size 2 x k, where each column is of
 %     the form [start; end], where start and end define the beginning and
 %     ending frequency bins of the signal contained in X_masked. Useful as
 %     input to associator

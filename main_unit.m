@@ -37,7 +37,7 @@
 %     note above, tracking matrix of entries of X_sig that are zero if
 %     entry is less than 5*mu_0 and increments by 1 as new entries above
 %     5*mu_0 are found through looping procedure. This process also
-%     generates the "keys" of key_dict
+%     generates the 'keys' of key_dict
 % 
 %     key_dict - Double matrix 1 x u as described in the note above, stores
 %     (row, column) of entry of visited_tracker with value i in its i'th
