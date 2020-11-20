@@ -236,6 +236,10 @@ Have been sloppy about updating this file in recent weeks. A summary of major up
 - Bugs came up while testing the above programs which were fixed, namely some improper usage of strings vs. char arrays, not returning changed values in check_inputs.m.
 - Above programs required changing of directories, which was incorporated into the code where relevant
 
+--------
+
+18nov2020
+Let save_detections.m run on research PC for several hours and no detections found. Realized that Helble et al. ran program in 75 sec blocks, and longer time periods scale the test statistic down. Is this scaling linear? Would prefer to process .wav files in one piece and scale down test stat thresholds than to parse in 75 sec intervals
 
 
 

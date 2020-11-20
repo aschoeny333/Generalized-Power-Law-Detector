@@ -7,12 +7,12 @@
 % line for re-plotting data is also included
 
 % Definte input parameters
-fnam = 'test_blank.wav';
+fnam = 'AU-CZA01-111006-130000.wav';
 wav_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/test_wavs';
 programs_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev';
 pass_band = [150 1800];
 stop_band = [100 1850];
-t_bounds = [0 90];
+t_bounds = [375 450];
 gamma = 1;
 v1 = 1;
 v2 = 2;
@@ -34,6 +34,6 @@ min_noise_dur = 1;
 
  Plot_Data(original, whitener_rets.m, matrices.N, t_bounds, pass_band, stop_band, ...
         gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked, ...
-        freq_intervals, noise_intervals);
+        freq_intervals, noise_intervals.t);
 
 

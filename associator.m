@@ -13,12 +13,12 @@
 % Iterate through signals on starting receiver
 
 function [corr_bins] = associator(rec_dict_matrices, rec_dict_tseries, corr_type, ...
-    signal_intervals, filter_order, freq_bounds)
+    signal_intervals, filter_order, freq_bounds, programs_dir, fnam)
 
     if ~isempty(signal_intervals(1,:))
         corr_bins = zeros(size(rect_dict), size(signal_intervals, 2));
         corr_bins(1, :) = signal_intervals(1, :);
-
+        
         for i = 1:length(signal_intervals(1, :))
             % Step 1: Determine interval of investigation on reference receiver
             ref_duration = signal_intervals(:, i);
@@ -27,7 +27,7 @@ function [corr_bins] = associator(rec_dict_matrices, rec_dict_tseries, corr_type
             for j = 2 :length(rec_dict)   % Start at 2 bc 1 is always reference   
 
                 % Step 2.1: Determine interval of investigation on receiver j
-                j_duration;
+                j_duration = possible_range(fnam, j, signal_intervals(:, i), programs_dir);
 
                 % TO DO: Implement interval determination program
 
