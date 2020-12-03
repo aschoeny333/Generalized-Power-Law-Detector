@@ -161,18 +161,14 @@
 %     signal_intervals that have duration at least t_min
 
 function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
-    eta_noise, t_min, t_bounds)
+    eta_noise, t_min, t_bounds, N, mu)
 
     % Step 1: Preprocessing to determine X_s as defined on page 2691
-
-    % Step 1.1 - Determine mu and N
-    mu = whitener(X);
-    [~, ~, N] = test_stat(X, mu, gamma, v1, v2);
 
     % Step 1.1 - Identify columns of X that have a test statistic less than
     % eta_noise
     N_sum = sum(N);
-    [rows, cols] = size(N);
+    [rows, cols] = size(X);
     X_s = zeros(rows, cols);
     col_counter = 1;
     for i = 1:cols

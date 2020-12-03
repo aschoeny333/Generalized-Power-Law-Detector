@@ -172,7 +172,7 @@
 function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     X_masked, freq_intervals_sec, noise_intervals] = GPL(fnam, wav_dir, programs_dir, pass_band, stop_band, ...
     t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, noise_thresh, ...
-    max_noise_dur, min_noise_dur)
+    max_noise_dur, min_noise_dur, filter_order)
     
 %     Step 0: Check validity of inputs, change as necessary
     disp('Checking validity of inputs');
@@ -205,7 +205,6 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
         data_filtered = filter(lpFilt, data_bounded);
     else
         % Bandpass filter
-        filter_order=10;
         bpFilt = designfilt('bandpassiir','FilterOrder',filter_order, ...
             'HalfPowerFrequency1',stop_band(1),'HalfPowerFrequency2',stop_band(2), ...
             'SampleRate', samp_rate);
@@ -239,6 +238,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     original.f = freqs_trimmed;
     original.t = times;
     original.n = nfft_val;
+    original.h = hz_per_bin;
 
     disp('Determining initial test statistic');
     % Step 2: Generate matrices A, B, and N from Fourier Matrix
@@ -260,7 +260,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     disp('Running the detector procedure');
     % Step 3: Run the detector
     [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, eta_noise, ...
-        t_min, t_bounds);
+        t_min, t_bounds, N, mu);
     
     disp('Running the masking procedure');
     % Step 4: Run the masking procedure

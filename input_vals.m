@@ -22,18 +22,40 @@ t_min = 0.35;
 noise_thresh = eta_thresh / 2;
 max_noise_dur = 5;
 min_noise_dur = 1;
+filter_order = 10;
 
 % Run GPL.m and save results
 [sound, filters, original, whitener_rets, matrices, X_s, intervals, X_masked, ...
-    freq_intervals, noise_intervals] = GPL(fnam, wav_dir, programs_dir, pass_band, stop_band, t_bounds, ...
-    gamma, v1, v2, eta_thresh, eta_noise, t_min, noise_thresh, max_noise_dur, min_noise_dur);
+    freq_intervals, noise_intervals] = GPL(fnam, wav_dir, programs_dir, pass_band, ...
+    stop_band, t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, ...
+    noise_thresh, max_noise_dur, min_noise_dur, filter_order);
 
 
 %  Copy the below if re-plotting is necessary, namely with some changes to
 %  the variables saved from running GPL.m
+% 
+%  Plot_Data(original, whitener_rets.m, matrices.N, t_bounds, pass_band, stop_band, ...
+%         gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked, ...
+%         freq_intervals, noise_intervals.t);
 
- Plot_Data(original, whitener_rets.m, matrices.N, t_bounds, pass_band, stop_band, ...
-        gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked, ...
-        freq_intervals, noise_intervals.t);
+rec_dict_matrices = [];
+fnam2 = fnam;
+fnam2(8) = '2';
+fnam3 = fnam;
+fnam3(8) = '3';
+fnam4 = fnam;
+fnam4(8) = '4';
+fnam5 = fnam;
+fnam5(8) = '5';
+rec_dict_tseries = [fnam; fnam2; fnam3; fnam4; fnam5];
+corr_type = 1;
+signal_intervals = intervals.t;
+
+corr_times = associator(rec_dict_matrices, rec_dict_tseries, corr_type, ...
+    signal_intervals, filter_order, freq_intervals, wav_dir, programs_dir, ...
+    t_bounds, pass_band, stop_band);
+
+Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, t_bounds, pass_band, ...
+    stop_band, corr_times, signal_intervals);
 
 
