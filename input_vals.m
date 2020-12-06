@@ -16,19 +16,21 @@ t_bounds = [375 450];
 gamma = 1;
 v1 = 1;
 v2 = 2;
-eta_thresh = 2.62 * 10^-4;
-eta_noise = 2.07 * 10^-5;
+eta_thresh = 2.62 * 10^-4 * (75 / (t_bounds(2) - t_bounds(1)))^2;
+eta_noise = 2.07 * 10^-5 * (75 / (t_bounds(2) - t_bounds(1)))^2;
 t_min = 0.35;
 noise_thresh = eta_thresh / 2;
 max_noise_dur = 5;
 min_noise_dur = 1;
 filter_order = 10;
+detector_type = 2;
+num_receivers = 5;
 
 % Run GPL.m and save results
 [sound, filters, original, whitener_rets, matrices, X_s, intervals, X_masked, ...
     freq_intervals, noise_intervals] = GPL(fnam, wav_dir, programs_dir, pass_band, ...
     stop_band, t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, ...
-    noise_thresh, max_noise_dur, min_noise_dur, filter_order);
+    noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type);
 
 
 %  Copy the below if re-plotting is necessary, namely with some changes to
@@ -39,21 +41,20 @@ filter_order = 10;
 %         freq_intervals, noise_intervals.t);
 
 rec_dict_matrices = [];
-fnam2 = fnam;
-fnam2(8) = '2';
-fnam3 = fnam;
-fnam3(8) = '3';
-fnam4 = fnam;
-fnam4(8) = '4';
-fnam5 = fnam;
-fnam5(8) = '5';
-rec_dict_tseries = [fnam; fnam2; fnam3; fnam4; fnam5];
+rec_dict_tseries = zeros(num_receivers, length(fnam));
+rec_dict_tseries(1, :) = fnam;
+for i = 2:num_receivers
+    next_fnam = fnam;
+    next_fnam(8) = num2str(i);
+    rec_dict_tseries(i, :) = next_fnam;
+end
+
 corr_type = 1;
 signal_intervals = intervals.t;
+rec_dict_tseries = char(rec_dict_tseries);
 
 corr_times = associator(rec_dict_matrices, rec_dict_tseries, corr_type, ...
-    signal_intervals, filter_order, freq_intervals, wav_dir, programs_dir, ...
-    t_bounds, pass_band, stop_band);
+    signal_intervals, filter_order, freq_intervals, wav_dir, programs_dir);
 
 Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, t_bounds, pass_band, ...
     stop_band, corr_times, signal_intervals);

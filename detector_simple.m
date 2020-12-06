@@ -160,113 +160,69 @@
 %     described in note above but later trimmed to only contain indeces of
 %     signal_intervals that have duration at least t_min
 
-function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
-    eta_noise, t_min, t_bounds, N, mu)
+function [intervals] = detector_simple(X, eta_thresh, eta_noise, t_min, ...
+    t_bounds, N)
 
     % Step 1: Preprocessing to determine X_s as defined on page 2691
 
     % Step 1.1 - Identify columns of X that have a test statistic less than
     % eta_noise
-    N_sum = sum(N);
-    [rows, cols] = size(X);
-    X_s = zeros(rows, cols);
-    col_counter = 1;
-    for i = 1:cols
-        if N_sum(i) < eta_noise
-            X_s(:, col_counter) = X(:, i);
-            col_counter = col_counter + 1;
-        end
-    end  
-
-    % Step 1.2 - Determine test statistic array for X_s after removing 0
-    % columns
-    X_s(:, col_counter : end) = [];
-    mu_s = whitener(X_s);
-    [~, ~, N_s] = test_stat(X_s, mu_s, gamma, v1, v2);
-    test_stat_s = sum(N_s);
-
-    % Step 1.3 - Remove columns of X_s with test statistic greater than
-    % eta_thresh
-    remove_cols = zeros(cols, 1);
-    col_counter = 1;
-    for i = 1:length(N_s)
-        if test_stat_s(i) > eta_thresh
-            remove_cols(col_counter) = i;
-        end
-    end
-    remove_cols(col_counter : end) = [];
-    X_s(:, remove_cols) = [];
+    test_stat = sum(N);
+    [~, cols] = size(X);
 
     % Step 2: Iterative determination of event intervals
+    
+    % Declare return variable 
+    signal_intervals = zeros(2, cols);
+    signal_counter = 1;
 
-    cols_s = length(X_s(:, 1));
-    if cols_s == 0
-        % What to do here? is this case possible?
-        disp('X_s is empty. Unknown how to handle this case.');
-    else
-        % Declare return variable 
-        signal_intervals = zeros(2, cols);
-        signal_counter = 1;
+    % Declare looping variables
+    dif_ind_below = 0;
+    dif_ind_above = 0;
 
-        % Declare looping variables
-        cur_test_stat = N_sum;
-        cur_N = N;
-        cur_matrix = X;
-        cur_mu = mu;
-        dif_ind_below = 0;
-        dif_ind_above = 0;
+    % Find current maximum test statistic value and index
+    [max_ts, max_ind] = max(test_stat);
 
-        % Find current maximum test statistic value and index
-        [max_ts, max_ind] = max(cur_test_stat);
+    % Looping procedure: Identify all signal time segments satisfying
+    % criteia laid out in Helble et al. (2012) p.2691
+    while max_ts > eta_thresh
+        % Display alert that the loop has restarted. Useful for
+        % understanding timing of program execution
+        disp('another max found');
 
-        % Looping procedure: Identify all signal time segments satisfying
-        % criteia laid out in Helble et al. (2012) p.2691
-        while max_ts > eta_thresh
-            % Display alert that the loop has restarted. Useful for
-            % understanding timing of program execution
-            disp('another max found');
-
-            % Identify time bounds of signal 
-            if max_ind ~= 1
-                while cur_test_stat(max_ind - dif_ind_below) > eta_noise
-                    dif_ind_below = dif_ind_below + 1;
-                    if max_ind - dif_ind_below == 1
-                        disp('Breaking - end of matrix reached');
-                        break
-                    end
+        % Identify time bounds of signal 
+        if max_ind ~= 1
+            while test_stat(max_ind - dif_ind_below) > eta_noise
+                dif_ind_below = dif_ind_below + 1;
+                if max_ind - dif_ind_below == 1
+                    disp('Breaking - end of matrix reached');
+                    break
                 end
             end
-            if max_ind ~= cols
-                while cur_test_stat(max_ind + dif_ind_above) > eta_noise
-                    dif_ind_above = dif_ind_above + 1;
-                    if max_ind + dif_ind_above == cols
-                        disp('Breaking - end of matrix reached');
-                        break
-                    end
-                end
-            end
-            
-            % Assign signal bound indeces based on dif_ind variables
-            interval_ind_below = max_ind - dif_ind_below;
-            interval_ind_above = max_ind + dif_ind_above;
-
-            % Record time interval
-            signal_intervals(:, signal_counter) = [interval_ind_below ; interval_ind_above];
-            signal_counter = signal_counter + 1;
-
-            % Add random X_s columns in place of signal columns 
-            for i = interval_ind_below : interval_ind_above
-                cur_matrix(:, i) = X_s(:, randi(cols_s));
-            end
-
-            % Reset loop variable values
-            dif_ind_below = 0;
-            dif_ind_above = 0;
-            cur_mu = whitener(cur_matrix);
-            [~, ~, cur_N] = test_stat(cur_matrix, cur_mu, gamma, v1, v2);
-            cur_test_stat = sum(cur_N);
-            [max_ts, max_ind] = max(cur_test_stat);
         end
+        if max_ind ~= cols
+            while test_stat(max_ind + dif_ind_above) > eta_noise
+                dif_ind_above = dif_ind_above + 1;
+                if max_ind + dif_ind_above == cols
+                    disp('Breaking - end of matrix reached');
+                    break
+                end
+            end
+        end
+
+        % Assign signal bound indeces based on dif_ind variables
+        interval_ind_below = max_ind - dif_ind_below;
+        interval_ind_above = max_ind + dif_ind_above;
+
+        % Record time interval
+        signal_intervals(:, signal_counter) = [interval_ind_below ; interval_ind_above];
+        signal_counter = signal_counter + 1;
+
+        % Reset loop variable values
+        dif_ind_below = 0;
+        test_stat(interval_ind_below:interval_ind_above) = zeros(1, ...
+            interval_ind_above - interval_ind_below + 1);
+        [max_ts, max_ind] = max(test_stat);
     end
 
     % Step 3: Trim 0's from signal_intervals, combine adjacent events, check
