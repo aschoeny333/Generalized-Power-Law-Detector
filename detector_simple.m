@@ -85,47 +85,8 @@
 %     then truncating the zeros after a looping procedure) is used to
 %     prevent resizing, which is a strain on the program's runtime.
 % 
-%     mu_s - Double column vector of size m as described in note above,
-%     output of whitener.m when X_s used as input, necessary for finding
-%     columns of X with test statistic below eta_noise while accounting for
-%     influence of signals on standard mu calculation
-% 
-%     N_s - Double array ending as size m*n' as described in note above,
-%     test statistic matrix calculated using X_s and mu_s for purpose
-%     described in mu_s description
-% 
-%     test_stat_s - Double row vector of size n' as described in note
-%     above, test statistic array calculated from N_s for purpose described
-%     in mu_s description
-% 
-%     remove_cols - Double row vector initially of size n as described in
-%     note above but later trimmed to only contain column indeces of X_s
-%     that had test statistic test_stat_s less than or equal to eta_thresh
-% 
-%     cols_s - 1 x 1 Double equal to n' as described in note above, length
-%     of X_s used to generated a random integer to randomly select a column
-%     in X_s to replace columns in X where a signal has been identified and
-%     recorded
-% 
 %     signal_counter - 1 x 1 Double, looping variable counting number of
 %     identified signals to truncate zeros after loop terminates
-% 
-%     cur_N - Double matrix of size m x n as described in note above,
-%     looping variable that updates with every pass of the loop with the
-%     new test statistic matrix calculated from cur_matrix and cur_mu
-% 
-%     cur_test_stat - Double row vector of size n as described in note
-%     above, looping variable that updates with every pass of the loop with
-%     the new test statistic calculated from cur_N
-% 
-%     cur_matrix - Double matrix of size m x n as described in note above
-%     that updates with every pass of the loop with the new matrix after
-%     swapping identified signal columns with randomly selected columns
-%     from X_s
-% 
-%     cur_mu - Double column vector of size m as described in note above
-%     that updates with every pass of the loop with the new whitener array
-%     calculated from cur_matrix
 % 
 %     dif_ind_below - 1 x 1 Double, looping variable that starts at max_ind
 %     and increments down by 1 until a test statistic value below eta_noise

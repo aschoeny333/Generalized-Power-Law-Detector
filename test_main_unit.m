@@ -2,7 +2,7 @@
 % 
 % Author: Alex Schoeny
 % 
-% Testing cases for main_unit.m
+% Goal: Provide testing cases for main_unit.m
 % 
 % Test 1: main_unit of an empty matrix is empty
 test_empty = zeros(4);

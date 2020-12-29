@@ -1,12 +1,13 @@
-% Input Parameters to Run GPL.m as a Script
+ % Input Parameters to Run GPL.m as a Script
 
 % Author: Alex Schoeny
 % 
 % Goal: Provide a Matlab script to easily assign or change values to input
-% parameters of GPL.m, run the program, and save the results. A commented
-% line for re-plotting data is also included
+% parameters of GPL.m, run the program, and save the results. See
+% descriptions of programs below for meaning of each input parameter. A
+% commented line for re-plotting data is also included
 
-% Definte input parameters
+% Define input parameters
 fnam = 'AU-CZA01-111006-130000.wav';
 wav_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/test_wavs';
 programs_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev';
@@ -23,7 +24,7 @@ noise_thresh = eta_thresh / 2;
 max_noise_dur = 5;
 min_noise_dur = 1;
 filter_order = 10;
-detector_type = 2;
+detector_type = 1;
 num_receivers = 5;
 
 % Run GPL.m and save results
@@ -40,7 +41,7 @@ num_receivers = 5;
 %         gamma, v1, v2, eta_thresh, eta_noise, intervals.t, X_masked, ...
 %         freq_intervals, noise_intervals.t);
 
-rec_dict_matrices = [];
+% Define input parameters for associator
 rec_dict_tseries = zeros(num_receivers, length(fnam));
 rec_dict_tseries(1, :) = fnam;
 for i = 2:num_receivers
@@ -50,13 +51,15 @@ for i = 2:num_receivers
 end
 
 corr_type = 1;
-signal_intervals = intervals.t;
+sig_intervals = intervals.t;
 rec_dict_tseries = char(rec_dict_tseries);
 
-corr_times = associator(rec_dict_matrices, rec_dict_tseries, corr_type, ...
-    signal_intervals, filter_order, freq_intervals, wav_dir, programs_dir);
+% Run associator
+corr_times = associator(rec_dict_tseries, corr_type, ...
+    sig_intervals, filter_order, freq_intervals, wav_dir, programs_dir);
 
+% Plot associations
 Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, t_bounds, pass_band, ...
-    stop_band, corr_times, signal_intervals);
+    stop_band, corr_times, sig_intervals);
 
 

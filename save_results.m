@@ -1,3 +1,12 @@
+% Save Results of GPL Detector and Associator
+% 
+% Author: Alex Schoeny
+% 
+% Goal: Provide a Matlab script to easily assign or change values of input
+% paramaters, run the program over multiple .wav files in a directory, and
+% save the results. See descriptions of programs below for meaning of each
+% input parameter.
+
 wav_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/test_wavs';
 programs_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev';
 
@@ -20,6 +29,7 @@ for file = test_files'
     min_noise_dur = 1;
     filter_order = 10;
     detector_type = 1;
+    num_receivers = 5;
     
     % Run GPL Detector
     [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
@@ -28,7 +38,6 @@ for file = test_files'
         noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type);
     
     % Run associator
-    rec_dict_matrices = [];
     rec_dict_tseries = zeros(num_receivers, length(fnam));
     rec_dict_tseries(1, :) = fnam;
     for i = 2:num_receivers
@@ -37,11 +46,11 @@ for file = test_files'
         rec_dict_tseries(i, :) = next_fnam;
     end
     corr_type = 1;
-    signal_intervals = intervals.t;
+    sig_intervals = intervals.t;
     rec_dict_tseries = char(rec_dict_tseries);
     
-    corr_times = associator(rec_dict_matrices, rec_dict_tseries, corr_type, ...
-    signal_intervals, filter_order, freq_intervals, wav_dir, programs_dir);
+    corr_times = associator(rec_dict_tseries, corr_type, sig_intervals, ...
+        filter_order, freq_intervals, wav_dir, programs_dir);
     
     % Save detector outputs and input parameters in a table
     detections = intervals.t;

@@ -58,7 +58,19 @@
 %
 %     max_noise_dur - 1 x 1 double, value in seconds that the length of the
 %     noise bounds cannot exceed
-%    
+%  
+%     min_noise_dur - 1 x 1 double, value in seconds that the length of the
+%     noise bounds must exceed
+%
+%     filter_order - 1 x 1 double, input argument for Matlab function
+%     designfilt, suggested value of 10
+%
+%     detector_type - 1 x 1 double. If 1, runs detector.m, which replaces
+%     each individual detection with columns containing noise conditions
+%     and then recalculates test statistic (hence is better suited for data
+%     with many signals, has longer runtime). If any other value, runs
+%     detector_simple.m, which does not replace columns of detections
+%
 % Outputs
 %
 %     A note on size definitions: Some matrices and arrays sizes are
@@ -180,7 +192,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     [t_bounds, stop_band, pass_band, eta_thresh, eta_noise, t_min, noise_thresh, ...
         max_noise_dur, min_noise_dur] = check_inputs(fnam, wav_dir, programs_dir, pass_band, ...
         stop_band, t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, ...
-        noise_thresh, max_noise_dur, min_noise_dur);
+        noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type);
     
     [data, samp_rate] = audioread(fnam);
     cd(programs_dir);
@@ -280,7 +292,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     noise_intervals = noise_bounds(intervals.i, sum(N), cols, noise_thresh, ...
         t_bounds, max_noise_dur, min_noise_dur);
     
-    disp('Plotting Data');
+    %disp('Plotting Data');
     % Step 6: Generate Plot_Data plots
 %     Plot_Data(original, mu, N, t_bounds, pass_band, stop_band, gamma, v1, ...
 %         v2, eta_thresh, eta_noise, intervals.t, X_masked, freq_intervals_sec, noise_intervals.t);
@@ -299,8 +311,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
 %     data.Max_Duration = 60; % For more specific value for a given species, see GPL Google Sheet
 %     data.nrec_sf = [1 2 3 4 5];
     
-    
-    
+end
     
     
     
