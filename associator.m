@@ -57,10 +57,9 @@ function [corr_times] = associator(rec_dict_tseries, corr_type, ...
 
             % Step 2: Iterate through other (non-reference) receivers 
             for j = 2 :length(rec_dict_tseries(:,1))   % Start at 2 bc 1 is always reference   
-
                 % Step 2.1: Determine interval of investigation on receiver j
                 j_duration = possible_range(rec_dict_tseries(1, :), j, ref_duration, programs_dir);
-
+                
                 % Step 2.2: Determine correlation function
                 if corr_type == 1 % 1D, time series correlation
                     % Step 2.2.1: Read in audio time series from the two

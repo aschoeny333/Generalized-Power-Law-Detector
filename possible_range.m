@@ -32,7 +32,7 @@
 %     drift_date - 1 x 6 Double, vector containing the dete-time components
 %     of the closest clock bias measurement
 
-function [range, drift_ind, drift_date] = possible_range(fnam, rec_j, ...
+function [range, drift_ind, drift_date, drift] = possible_range(fnam, rec_j, ...
     sig_bound, programs_dir)
     
     % Step 1: Determine the receiver array from fnam
@@ -72,11 +72,13 @@ function [range, drift_ind, drift_date] = possible_range(fnam, rec_j, ...
 
     [~, drift_ind] = min(abs(time_difs));
     drift_date = datevec(bias_times(drift_ind));
-    drift = biases(drift_ind, rec_j, array);
 
     % Step 2.4: If nearest date-time corresponds to first or last recorded
-    % clock bias, determine drift by linear extrapolation using drift_rate
+    % clock bias, determine drift by linear extrapolation using drift_rate.
+    % Otherwise, determine drift by linear interpolation of the two neares
+    % clock bias bounds measurements
     if drift_ind == 0
+        % Extrapolation procedure - reference date before any measurements
         first_dif = etime(ref_date, datevec(bias_times(0)));
         if first_dif < 0
             if biases(1, rec_j, array) < 0
@@ -86,6 +88,7 @@ function [range, drift_ind, drift_date] = possible_range(fnam, rec_j, ...
             end
         end
     elseif drift_ind == num_times
+        % Extrapolation procedure - reference date after all measurements
         last_dif = etime(ref_date, datevec(bias_times(end)));
         if last_dif > 0
             if biases(end, rec_j, array) < 0
@@ -94,6 +97,20 @@ function [range, drift_ind, drift_date] = possible_range(fnam, rec_j, ...
                 drift = last_dif * drift_rate;
             end
         end
+    else
+        % Interpolation procedure
+        dates_dif = etime(drift_date, ref_date);
+        if dates_dif > 0
+            gap_secs = etime(drift_date, datevec(bias_times(drift_ind - 1)));
+            drift = interp1([0, gap_secs], [biases(drift_ind - 1, rec_j, array), ...
+                biases(drift_ind, rec_j, array)], gap_secs - dates_dif);
+        elseif dates_dif < 0
+            gap_secs = etime(datevec(bias_times(drift_ind + 1)), drift_date);
+            drift = interp1([0, gap_secs], [biases(drift_ind, rec_j, array), ...
+                biases(drift_ind + 1, rec_j, array)], dates_dif);
+        else
+            drift = biases(drift_ind, rec_j, array);
+        end  
     end
 
     % Step 3: Determine the distance between receivers
@@ -141,7 +158,7 @@ function [range, drift_ind, drift_date] = possible_range(fnam, rec_j, ...
     min_speed = speed_bounds(1);
 
     range = [sig_bound(1) - drift - dist / min_speed, sig_bound(2) - drift + dist / min_speed];
-    range(1) = range(1) - (sig_bound(2) - sig_bound(1));
-    range(2) = range(2) + (sig_bound(2) - sig_bound(1));
+%     range(1) = range(1) - (sig_bound(2) - sig_bound(1));
+%     range(2) = range(2) + (sig_bound(2) - sig_bound(1));
 
     cd(programs_dir);
