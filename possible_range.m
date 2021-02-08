@@ -31,9 +31,17 @@
 %     
 %     drift_date - 1 x 6 Double, vector containing the dete-time components
 %     of the closest clock bias measurement
+%
+%     drift - 1 x 1 Double, value in seconds by which the time series on
+%     receiver j needs to be translated to align properly with the
+%     reference receiver
+%     
+%     dist - 1 x 1 Double. Given the possible bounds in each dimension
+%     (longitude, latitude, altitude), find the maximum possible distance
+%     between the two receivers in meters
 
-function [range, drift_ind, drift_date, drift] = possible_range(fnam, rec_j, ...
-    sig_bound, programs_dir)
+function [range, drift_ind, drift_date, drift, dist] = possible_range(fnam, ...
+    rec_j, sig_bound, programs_dir)
     
     % Step 1: Determine the receiver array from fnam
     if (fnam(6) == 'A')
@@ -119,46 +127,64 @@ function [range, drift_ind, drift_date, drift] = possible_range(fnam, rec_j, ...
     cd(rec_locs_path);
     load('rec_locs.mat');
 
-    earth_rad = 6.371 * 10^6;
-
     if array == 1
         xy_locs = locs(2).bnds(1:5, :);
-        z_locs = locs(2).z_bnds(1:5, :);
     else
         xy_locs = locs(2).bnds(6:10, :);
-        z_locs = locs(2).z_bnds(6:10, :);
     end
 
     ref_xy_locs = xy_locs(1, :);
-    ref_z_locs = z_locs(1, :);
     j_xy_locs = xy_locs(rec_j, :);
-    j_z_locs = z_locs(rec_j, :);
     
     % Step 3.2: Determine the maximum possible distance between the
     % receivers in each dimension
     poss_x_difs = [ref_xy_locs(1) - j_xy_locs(1), ref_xy_locs(1) - j_xy_locs(2), ...
         ref_xy_locs(2) - j_xy_locs(1), ref_xy_locs(2) - j_xy_locs(2)];
-    x_dif = max(abs(poss_x_difs)) * earth_rad;
+    [~, max_lon_dif_ind] = max(abs(poss_x_difs));
+    if max_lon_dif_ind == 1
+        lon1 = ref_xy_locs(1);
+        lon2 = j_xy_locs(1);
+    elseif max_lon_dif_ind == 2
+        lon1 = ref_xy_locs(1);
+        lon2 = j_xy_locs(2);
+    elseif max_lon_dif_ind == 3
+        lon1 = ref_xy_locs(2);
+        lon2 = j_xy_locs(1);
+    else
+        lon1 = ref_xy_locs(2);
+        lon2 = j_xy_locs(2);
+    end
 
     poss_y_difs = [ref_xy_locs(3) - j_xy_locs(3), ref_xy_locs(3) - j_xy_locs(4), ...
         ref_xy_locs(4) - j_xy_locs(3), ref_xy_locs(4) - j_xy_locs(4)];
-    y_dif = max(abs(poss_y_difs)) * earth_rad;
+    [~, max_lat_dif_ind] = max(abs(poss_y_difs));
+    if max_lat_dif_ind == 1
+        lat1 = ref_xy_locs(1);
+        lat2 = j_xy_locs(1);
+    elseif max_lat_dif_ind == 2
+        lat1 = ref_xy_locs(1);
+        lat2 = j_xy_locs(2);
+    elseif max_lat_dif_ind == 3
+        lat1 = ref_xy_locs(2);
+        lat2 = j_xy_locs(1);
+    else 
+        lat1 = ref_xy_locs(2);
+        lat2 = j_xy_locs(2);
+    end
 
-    poss_z_difs = [ref_z_locs(1) - j_z_locs(1), ref_z_locs(1) - j_z_locs(2), ...
-        ref_z_locs(2) - j_z_locs(1), ref_z_locs(2) - j_z_locs(2)];
-    z_dif = max(abs(poss_z_difs));
 
     % Step 3.3: Determine the maximum Euclidean distance between the two
     % receivers
-    dist = (x_dif^2 + y_dif^2 + z_dif^2)^0.5;
+    
+    cd(programs_dir);
+    dist = great_circle_distance(lat1, lat2, lon1, lon2);
 
     % Step 4: Determine the possible range on receiver j that must contain
     % the reference signal
-    speed_bounds = [1450 1480]; % In m/s
+    speed_bounds = [1400 1480]; % In m/s
     min_speed = speed_bounds(1);
 
     range = [sig_bound(1) - drift - dist / min_speed, sig_bound(2) - drift + dist / min_speed];
 %     range(1) = range(1) - (sig_bound(2) - sig_bound(1));
 %     range(2) = range(2) + (sig_bound(2) - sig_bound(1));
 
-    cd(programs_dir);
