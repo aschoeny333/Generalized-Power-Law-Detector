@@ -40,7 +40,8 @@
 %     of the signal identified by the detector
 
 function [] = Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, ...
-    t_bounds, pass_band, stop_band, corr_times, sig_intervals)
+    t_bounds, pass_band, stop_band, corr_times, sig_intervals, freq_intervals, ...
+    range_starts, range_ends)
 
     figure; 
     num_receivers = length(rec_dict_tseries(:,1));
@@ -92,24 +93,46 @@ function [] = Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, ...
         if numel(corr_times) == 0
             % Don't plot any time bound lines
         elseif length(corr_times(1, :)) == 1
-            xline(corr_times(i, 1), 'color', 'r', 'LineWidth', 2);
-            xline(corr_times(i, 1) + sig_intervals(2,1) - sig_intervals(1,1), ...
-                'color', 'r', 'LineWidth', 2);
+%             xline(corr_times(i, 1), 'color', 'r', 'LineWidth', 2);
+%             xline(corr_times(i, 1) + sig_intervals(2,1) - sig_intervals(1,1), ...
+%                 'color', 'r', 'LineWidth', 2);
     %         yline(freq_intervals(1, 1), 'color', 'g', 'LineWidth', 2);
     %         yline(freq_intervals(2, 1), 'color', 'r', 'LineWidth', 2);
-    %         rectangle('Position', [time_intervals(1,1), freq_intervals(1,1), ...
-    %             time_intervals(2,1) - time_intervals(1,1), freq_intervals(2,1) - freq_intervals(1,1)], ...
-    %             'EdgeColor', 'w', 'LineWidth', 3); 
+%             rectangle('Position', [corr_times(i,1), freq_intervals(1,1), ...
+%                 sig_intervals(2,1) - sig_intervals(1,1), freq_intervals(2,1) - freq_intervals(1,1)], ...
+%                 'EdgeColor', 'r', 'LineWidth', 2); 
+            verts = [corr_times(i,1) freq_intervals(1, 1) 5; corr_times(i,1) freq_intervals(2, 1) 5;...
+                corr_times(i,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) 5; ...
+                corr_times(i,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) 5]; 
+            face = [1 2 3 4];
+            patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
+            
+            if i ~= 1
+                xline(range_starts(i,1), '--', 'color', 'r', 'LineWidth', 2);
+                xline(range_ends(i,1), '--', 'color', 'r', 'LineWidth', 2);
+            end
         else
             for j = 1 : length(corr_times(1, :))
-                xline(corr_times(i, j), 'color', 'r', 'LineWidth', 2);
-                xline(corr_times(i, j) + sig_intervals(2,j) - sig_intervals(1,j), ...
-                    'color', 'r', 'LineWidth', 2);
+%                 xline(corr_times(i, j), 'color', 'r', 'LineWidth', 2);
+%                 xline(corr_times(i, j) + sig_intervals(2,j) - sig_intervals(1,j), ...
+%                     'color', 'r', 'LineWidth', 2);
     %             yline(freq_intervals(1, i), 'color', 'g', 'LineWidth', 2);
     %             yline(freq_intervals(2, i), 'color', 'r', 'LineWidth', 2);
-    %             rectangle('Position', [time_intervals(1,i), freq_intervals(1,i), ...
-    %             time_intervals(2,i) - time_intervals(1,i), freq_intervals(2,i) - freq_intervals(1,i)], ...
-    %             'EdgeColor', 'k', 'LineWidth', 3); 
+%                 rectangle('Position', [corr_times(i, j), freq_intervals(1,j), ...
+%                 sig_intervals(2,j) - sig_intervals(1,j), freq_intervals(2,j) - freq_intervals(1,j)], ...
+%                 'EdgeColor', 'r', 'LineWidth', 2); 
+                verts = [corr_times(i,j) freq_intervals(1, j) 5; corr_times(i,j) freq_intervals(2, j) 5;...
+                    corr_times(i,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) 5; ...
+                    corr_times(i,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) 5]; 
+                face = [1 2 3 4];
+                color_list = ['r', 'g', 'y', 'w', 'c'];
+                patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5)), ...
+                    'FaceColor', 'none', 'LineWidth', 1);
+                
+                if i ~= 1
+                    xline(range_starts(i,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
+                    xline(range_ends(i,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
+                end
             end
         end
         xlabel('Time (secs)');

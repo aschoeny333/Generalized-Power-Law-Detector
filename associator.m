@@ -41,14 +41,18 @@
 %     the detection from the reference receiver, which can be calculated
 %     from sig_intervals
     
-function [corr_times] = associator(rec_dict_tseries, corr_type, ...
-    sig_intervals, filter_order, freq_intervals, wav_dir, programs_dir)
+function [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, ...
+    corr_type, sig_intervals, filter_order, freq_intervals, wav_dir, programs_dir)
 
     % Before executing the program, ensure that there are detections to
     % associate
     if ~isempty(sig_intervals(1,:))
         corr_times = zeros(size(rec_dict_tseries, 1), size(sig_intervals, 2));
+        range_starts = zeros(size(rec_dict_tseries, 1), size(sig_intervals, 2));
+        range_ends = zeros(size(rec_dict_tseries, 1), size(sig_intervals, 2));
         corr_times(1, :) = sig_intervals(1, :);
+        range_starts(1, :) = sig_intervals(1, :);
+        range_ends(1, :) = sig_intervals(2, :);
         
         % Iterate through the detections on the reference receiver
         for i = 1:length(sig_intervals(1, :))
@@ -59,6 +63,8 @@ function [corr_times] = associator(rec_dict_tseries, corr_type, ...
             for j = 2 :length(rec_dict_tseries(:,1))   % Start at 2 bc 1 is always reference   
                 % Step 2.1: Determine interval of investigation on receiver j
                 j_duration = possible_range(rec_dict_tseries(1, :), j, ref_duration, programs_dir);
+                range_starts(j,i) = j_duration(1);
+                range_ends(j,i) = j_duration(2);
                 
                 % Step 2.2: Determine correlation function
                 if corr_type == 1 % 1D, time series correlation
@@ -84,6 +90,16 @@ function [corr_times] = associator(rec_dict_tseries, corr_type, ...
                     % Step 2.2.4: Filter and trim the investigation
                     % interval on receiver j
                     j_tseries_filt = filter(bpFilt, j_tseries);
+                    
+                    if j_duration(1) < 0
+                        j_duration(2) = 0;
+                        disp("WARNING: Association range on receiver " + int2str(j) + ", signal " + int2str(i) + " extends before start of audio file, signal detection may fail");
+                    end
+                    if j_duration(2) > length(j_tseries_filt / samp_rate)
+                        j_duration(2) = length(j_tseries_filt / samp_rate);
+                        disp("WARNING: Association range on receiver " + int2str(j) + ", signal " + int2str(i) + " extends after end of audio file, signal detection may fail");
+                    end
+                   
                     j_tseries_filt = j_tseries_filt(1 + round(j_duration(1) ...
                         * samp_rate) : round(j_duration(2) * samp_rate));
 

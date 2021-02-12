@@ -49,8 +49,8 @@ for file = test_files'
     sig_intervals = intervals.t;
     rec_dict_tseries = char(rec_dict_tseries);
     
-    corr_times = associator(rec_dict_tseries, corr_type, sig_intervals, ...
-        filter_order, freq_intervals, wav_dir, programs_dir);
+    [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, ...
+        corr_type, sig_intervals, filter_order, freq_intervals, wav_dir, programs_dir);
     
     % Save detector outputs and input parameters in a table
     detections = intervals.t;
@@ -76,6 +76,16 @@ for file = test_files'
     Associations_R3 = corr_times(3, :).';
     Associations_R4 = corr_times(4, :).';
     Associations_R5 = corr_times(5, :).';
+    Range_Starts_R1 = range_starts(1,:).';
+    Range_Starts_R2 = range_starts(2,:).';
+    Range_Starts_R3 = range_starts(3,:).';
+    Range_Starts_R4 = range_starts(4,:).';
+    Range_Starts_R5 = range_starts(5,:).';
+    Range_Ends_R1 = range_ends(1,:).';
+    Range_Ends_R2 = range_ends(2,:).';
+    Range_Ends_R3 = range_ends(3,:).';
+    Range_Ends_R4 = range_ends(4,:).';
+    Range_Ends_R5 = range_ends(5,:).';
     Freq_1 = freq_intervals(1,:).';
     Freq_2 = freq_intervals(2,:).';
     Noise_1 = noise_intervals.t(1,:).';
@@ -84,11 +94,17 @@ for file = test_files'
     csv_name = "results_" + file.name(1:end - 4) + ".csv";  % - 4 to remove .wav
     
     results_table = table(Detections_R1, Detections_R1_end, Associations_R2, ...
-        Associations_R3, Associations_R4, Associations_R5, Freq_1, Freq_2, Noise_1, ...
-        Noise_2, Pass_band_1, Pass_band_2, Stop_band_1, Stop_band_2, T_bounds_1, ...
-        T_bounds_2, Gamma, V1, V2, Eta_thresh, Eta_noise, T_min, Noise_thresh, ...
-        Max_noise_dur, Min_noise_dur);
+        Associations_R3, Associations_R4, Associations_R5, Range_Starts_R1, ...
+        Range_Starts_R2, Range_Starts_R3, Range_Starts_R4, Range_Starts_R5, ...
+        Range_Ends_R1, Range_Ends_R2, Range_Ebnds_R3, Range_Ends_R4, Range_Ends_R5, ...
+        Freq_1, Freq_2, Noise_1, Noise_2, Pass_band_1, Pass_band_2, Stop_band_1, ...
+        Stop_band_2, T_bounds_1, T_bounds_2, Gamma, V1, V2, Eta_thresh, Eta_noise, ...
+        T_min, Noise_thresh, Max_noise_dur, Min_noise_dur);
     
     % Save table as .csv file
     writetable(results_table, csv_name);
+    
+    % Plot associations
+    Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, t_bounds, pass_band, ...
+        stop_band, corr_times, sig_intervals, freq_intervals, range_starts, range_ends);
 end

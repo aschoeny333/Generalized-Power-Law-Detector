@@ -159,17 +159,17 @@ function [range, drift_ind, drift_date, drift, dist] = possible_range(fnam, ...
         ref_xy_locs(4) - j_xy_locs(3), ref_xy_locs(4) - j_xy_locs(4)];
     [~, max_lat_dif_ind] = max(abs(poss_y_difs));
     if max_lat_dif_ind == 1
-        lat1 = ref_xy_locs(1);
-        lat2 = j_xy_locs(1);
+        lat1 = ref_xy_locs(3);
+        lat2 = j_xy_locs(3);
     elseif max_lat_dif_ind == 2
-        lat1 = ref_xy_locs(1);
-        lat2 = j_xy_locs(2);
+        lat1 = ref_xy_locs(3);
+        lat2 = j_xy_locs(4);
     elseif max_lat_dif_ind == 3
-        lat1 = ref_xy_locs(2);
-        lat2 = j_xy_locs(1);
+        lat1 = ref_xy_locs(4);
+        lat2 = j_xy_locs(3);
     else 
-        lat1 = ref_xy_locs(2);
-        lat2 = j_xy_locs(2);
+        lat1 = ref_xy_locs(4);
+        lat2 = j_xy_locs(4);
     end
 
 
@@ -181,10 +181,14 @@ function [range, drift_ind, drift_date, drift, dist] = possible_range(fnam, ...
 
     % Step 4: Determine the possible range on receiver j that must contain
     % the reference signal
-    speed_bounds = [1400 1480]; % In m/s
+    speed_bounds = [1450 1480]; % In m/s
     min_speed = speed_bounds(1);
 
-    range = [sig_bound(1) - drift - dist / min_speed, sig_bound(2) - drift + dist / min_speed];
-%     range(1) = range(1) - (sig_bound(2) - sig_bound(1));
-%     range(2) = range(2) + (sig_bound(2) - sig_bound(1));
+    % Note: A negative drift value indicates that a receiver is slow
+    % compared to the reference receiver. Thus, to account for clock drift
+    % one must add that negative value to the association range to check
+    % earlier values in the time series. The same thinking applies for
+    % positive drift values, but in reverse.
+    range = [sig_bound(1) + drift - dist / min_speed, sig_bound(2) + drift + dist / min_speed];
+
 

@@ -24,7 +24,7 @@
 % 
 % Source: https://www.movable-type.co.uk/scripts/gis-faq-5.1.html
 
-function [dist, R] = great_circle_distance(lat1, lat2, lon1, lon2)
+function [dist, R, a] = great_circle_distance(lat1, lat2, lon1, lon2)
     % Determine the latitude-dependent Earth radius
     R = (6378 - 21 * sin(lat1)) * 1000;
     
