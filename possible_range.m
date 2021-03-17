@@ -115,7 +115,7 @@ function [range, drift_ind, drift_date, drift, dist] = possible_range(fnam, ...
         elseif dates_dif < 0
             gap_secs = etime(datevec(bias_times(drift_ind + 1)), drift_date);
             drift = interp1([0, gap_secs], [biases(drift_ind, rec_j, array), ...
-                biases(drift_ind + 1, rec_j, array)], dates_dif);
+                biases(drift_ind + 1, rec_j, array)], -1 * dates_dif);
         else
             drift = biases(drift_ind, rec_j, array);
         end  

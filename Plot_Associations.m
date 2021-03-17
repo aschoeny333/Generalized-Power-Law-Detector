@@ -126,12 +126,12 @@ function [] = Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, ...
                     corr_times(i,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) 5]; 
                 face = [1 2 3 4];
                 color_list = ['r', 'g', 'y', 'w', 'c'];
-                patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5)), ...
+                patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5) + 1), ...
                     'FaceColor', 'none', 'LineWidth', 1);
                 
                 if i ~= 1
-                    xline(range_starts(i,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
-                    xline(range_ends(i,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
+                    xline(range_starts(i,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
+                    xline(range_ends(i,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
                 end
             end
         end

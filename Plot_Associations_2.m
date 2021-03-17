@@ -93,6 +93,8 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
         
         X = abs(fourier_trimmed);
         
+        line_height = max(max(X));
+        
         surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
         axis xy; 
         axis tight; 
@@ -100,19 +102,19 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
         if numel(corr_times) == 0
             % Don't plot any time bound lines
         elseif length(corr_times(1, :)) == 1
-            verts = [corr_times(1,1) freq_intervals(1, 1) 5; corr_times(1,1) freq_intervals(2, 1) 5;...
-                corr_times(1,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) 5; ...
-                corr_times(1,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) 5]; 
+            verts = [corr_times(1,1) freq_intervals(1, 1) line_height; corr_times(1,1) freq_intervals(2, 1) line_height;...
+                corr_times(1,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) line_height; ...
+                corr_times(1,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
             face = [1 2 3 4];
             patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
         else
             for j = 1 : length(corr_times(1, :))
-                verts = [corr_times(1,j) freq_intervals(1, j) 5; corr_times(1,j) freq_intervals(2, j) 5;...
-                    corr_times(1,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) 5; ...
-                    corr_times(1,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) 5]; 
+                verts = [corr_times(1,j) freq_intervals(1, j) line_height; corr_times(1,j) freq_intervals(2, j) line_height;...
+                    corr_times(1,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) line_height; ...
+                    corr_times(1,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) line_height]; 
                 face = [1 2 3 4];
                 color_list = ['r', 'g', 'y', 'w', 'c'];
-                patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5)), ...
+                patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5) + 1), ...
                     'FaceColor', 'none', 'LineWidth', 1);
             end
         end
@@ -167,6 +169,7 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     end
 
     X = abs(fourier_trimmed);
+    line_height = max(max(X));
 
     surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
     axis xy; 
@@ -175,23 +178,23 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     if numel(corr_times) == 0
         % Don't plot any time bound lines
     elseif length(corr_times(1, :)) == 1
-        verts = [corr_times(2,1) freq_intervals(1, 1) 5; corr_times(2,1) freq_intervals(2, 1) 5;...
-            corr_times(2,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) 5; ...
-            corr_times(2,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) 5]; 
+        verts = [corr_times(2,1) freq_intervals(1, 1) line_height; corr_times(2,1) freq_intervals(2, 1) line_height;...
+            corr_times(2,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) line_height; ...
+            corr_times(2,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
         face = [1 2 3 4];
         patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
     else
         for j = 1 : length(corr_times(1, :))
-            verts = [corr_times(2,j) freq_intervals(1, j) 5; corr_times(2,j) freq_intervals(2, j) 5;...
-                corr_times(2,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) 5; ...
-                corr_times(2,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) 5]; 
+            verts = [corr_times(2,j) freq_intervals(1, j) line_height; corr_times(2,j) freq_intervals(2, j) line_height;...
+                corr_times(2,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) line_height; ...
+                corr_times(2,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) line_height]; 
             face = [1 2 3 4];
             color_list = ['r', 'g', 'y', 'w', 'c'];
-            patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5)), ...
+            patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5) + 1), ...
                 'FaceColor', 'none', 'LineWidth', 1);
             
-            xline(range_starts(2,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
-            xline(range_ends(2,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
+            xline(range_starts(2,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
+            xline(range_ends(2,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
         end
     end
     xlabel('Time (secs)');
@@ -246,6 +249,7 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     end
 
     X = abs(fourier_trimmed);
+    line_height = max(max(X));
 
     surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
     axis xy; 
@@ -254,23 +258,23 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     if numel(corr_times) == 0
         % Don't plot any time bound lines
     elseif length(corr_times(1, :)) == 1
-        verts = [corr_times(3,1) freq_intervals(1, 1) 5; corr_times(3,1) freq_intervals(2, 1) 5;...
-            corr_times(3,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) 5; ...
-            corr_times(3,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) 5]; 
+        verts = [corr_times(3,1) freq_intervals(1, 1) line_height; corr_times(3,1) freq_intervals(2, 1) line_height;...
+            corr_times(3,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) line_height; ...
+            corr_times(3,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
         face = [1 2 3 4];
         patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
     else
         for j = 1 : length(corr_times(1, :))
-            verts = [corr_times(3,j) freq_intervals(1, j) 5; corr_times(3,j) freq_intervals(2, j) 5;...
-                corr_times(3,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) 5; ...
-                corr_times(3,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) 5]; 
+            verts = [corr_times(3,j) freq_intervals(1, j) line_height; corr_times(3,j) freq_intervals(2, j) line_height;...
+                corr_times(3,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) line_height; ...
+                corr_times(3,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) line_height]; 
             face = [1 2 3 4];
             color_list = ['r', 'g', 'y', 'w', 'c'];
-            patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5)), ...
+            patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5) + 1), ...
                 'FaceColor', 'none', 'LineWidth', 1);
             
-            xline(range_starts(3,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
-            xline(range_ends(3,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
+            xline(range_starts(3,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
+            xline(range_ends(3,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
         end
     end
     xlabel('Time (secs)');
@@ -325,6 +329,7 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     end
 
     X = abs(fourier_trimmed);
+    line_height = max(max(X));
 
     surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
     axis xy; 
@@ -333,23 +338,23 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     if numel(corr_times) == 0
         % Don't plot any time bound lines
     elseif length(corr_times(1, :)) == 1
-        verts = [corr_times(4,1) freq_intervals(1, 1) 5; corr_times(4,1) freq_intervals(2, 1) 5;...
-            corr_times(4,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) 5; ...
-            corr_times(4,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) 5]; 
+        verts = [corr_times(4,1) freq_intervals(1, 1) line_height; corr_times(4,1) freq_intervals(2, 1) line_height;...
+            corr_times(4,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) line_height; ...
+            corr_times(4,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
         face = [1 2 3 4];
         patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
     else
         for j = 1 : length(corr_times(1, :))
-            verts = [corr_times(4,j) freq_intervals(1, j) 5; corr_times(4,j) freq_intervals(2, j) 5;...
-                corr_times(4,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) 5; ...
-                corr_times(4,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) 5]; 
+            verts = [corr_times(4,j) freq_intervals(1, j) line_height; corr_times(4,j) freq_intervals(2, j) line_height;...
+                corr_times(4,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) line_height; ...
+                corr_times(4,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) line_height]; 
             face = [1 2 3 4];
             color_list = ['r', 'g', 'y', 'w', 'c'];
-            patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5)), ...
+            patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5) + 1), ...
                 'FaceColor', 'none', 'LineWidth', 1);
             
-            xline(range_starts(4,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
-            xline(range_ends(4,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
+            xline(range_starts(4,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
+            xline(range_ends(4,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
         end
     end
     xlabel('Time (secs)');
@@ -404,6 +409,7 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     end
 
     X = abs(fourier_trimmed);
+    line_height = max(max(X));
 
     surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
     axis xy; 
@@ -412,23 +418,23 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     if numel(corr_times) == 0
         % Don't plot any time bound lines
     elseif length(corr_times(1, :)) == 1
-        verts = [corr_times(5,1) freq_intervals(1, 1) 5; corr_times(5,1) freq_intervals(2, 1) 5;...
-            corr_times(5,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) 5; ...
-            corr_times(5,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) 5]; 
+        verts = [corr_times(5,1) freq_intervals(1, 1) line_height; corr_times(5,1) freq_intervals(2, 1) line_height;...
+            corr_times(5,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) line_height; ...
+            corr_times(5,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
         face = [1 2 3 4];
         patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
     else
         for j = 1 : length(corr_times(1, :))
-            verts = [corr_times(5,j) freq_intervals(1, j) 5; corr_times(5,j) freq_intervals(2, j) 5;...
-                corr_times(5,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) 5; ...
-                corr_times(5,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) 5]; 
+            verts = [corr_times(5,j) freq_intervals(1, j) line_height; corr_times(5,j) freq_intervals(2, j) line_height;...
+                corr_times(5,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) line_height; ...
+                corr_times(5,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) line_height]; 
             face = [1 2 3 4];
             color_list = ['r', 'g', 'y', 'w', 'c'];
-            patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5)), ...
+            patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5) + 1), ...
                 'FaceColor', 'none', 'LineWidth', 1);
             
-            xline(range_starts(5,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
-            xline(range_ends(5,j), '--', 'color', color_list(mod(j, 5)), 'LineWidth', 2);
+            xline(range_starts(5,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
+            xline(range_ends(5,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
         end
     end
     xlabel('Time (secs)');
@@ -436,7 +442,5 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     ylabel('Frequency(HZ)');
     ylabel(c, 'Power');
     title("Associated signals on receiver 5");
-    
-    
     
     linkaxes([ax1 ax2 ax3 ax4 ax5], 'xy');

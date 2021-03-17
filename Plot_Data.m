@@ -230,19 +230,19 @@ function [X_sum, Xw_sum, N_sum, Nt_sum] = Plot_Data(original, mu, N, ...
     if numel(time_intervals) == 0
         % Don't plot any time bound lines
     elseif numel(time_intervals) == 2
-        xline(time_intervals(1, 1), 'color', 'g', 'LineWidth', 5);
-        xline(time_intervals(2, 1), 'color', 'r', 'LineWidth', 5);
+%         xline(time_intervals(1, 1), 'color', 'g', 'LineWidth', 5);
+%         xline(time_intervals(2, 1), 'color', 'r', 'LineWidth', 5);
     else
         for i = 1 : length(time_intervals(1, :))
-            xline(time_intervals(1, i), 'color', 'g', 'LineWidth', 5);
-            xline(time_intervals(2, i), 'color', 'r', 'LineWidth', 5);
+%             xline(time_intervals(1, i), 'color', 'g', 'LineWidth', 5);
+%             xline(time_intervals(2, i), 'color', 'r', 'LineWidth', 5);
         end
     end
     yline(eta_thresh * 1000, 'b');
     yline(eta_noise * 1000, 'k');
     xlabel('(Time (secs)');
     ylabel('T^g(X) \times 10^3');
-    title('Test Statistic vs. Time With Bounds Determined By Detector');
+    title('Test Statistic With Thresholds Plotted');
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     

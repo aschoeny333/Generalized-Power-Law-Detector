@@ -64,6 +64,7 @@ function [A, B, N] = test_stat(X, mu, gamma, v1, v2)
             for c = 1:cols
                 num = abs(X(r,c) ^ gamma - mu(r, 1));
                 denom_arg = abs(X(r, :) .^ gamma - mu(r, 1));
+                
                 B(r, c)= num / sqrt(sum(denom_arg .^ 2));
             end
         end

@@ -8,7 +8,7 @@
 % commented line for re-plotting data is also included
 
 % Define input parameters
-fnam = 'AU-CZA01-111006-130000.wav';
+fnam = 'AU-CZA03-111006-130000.wav';
 wav_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/test_wavs';
 programs_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev';
 pass_band = [150 1800];
@@ -32,7 +32,6 @@ num_receivers = 5;
     freq_intervals, noise_intervals] = GPL(fnam, wav_dir, programs_dir, pass_band, ...
     stop_band, t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, ...
     noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type);
-
 
 %  Copy the below if re-plotting is necessary, namely with some changes to
 %  the variables saved from running GPL.m
