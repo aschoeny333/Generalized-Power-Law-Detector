@@ -182,20 +182,19 @@
 %     variable assignment
     
 function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
-    X_masked, freq_intervals_sec, noise_intervals] = GPL(fnam, wav_dir, programs_dir, pass_band, stop_band, ...
+    X_masked, freq_intervals_sec, noise_intervals] = GPL(fnam, wav_dir, pass_band, stop_band, ...
     t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, noise_thresh, ...
-    max_noise_dur, min_noise_dur, filter_order, detector_type)
+    max_noise_dur, min_noise_dur, filter_order, detector_type, plot_GPL_data)
     
 %     Step 0: Check validity of inputs, change as necessary
     disp('Checking validity of inputs');
 
     [t_bounds, stop_band, pass_band, eta_thresh, eta_noise, t_min, noise_thresh, ...
-        max_noise_dur, min_noise_dur] = check_inputs(fnam, wav_dir, programs_dir, pass_band, ...
+        max_noise_dur, min_noise_dur] = check_inputs(fnam, wav_dir, pass_band, ...
         stop_band, t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, ...
         noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type);
     
-    [data, samp_rate] = audioread(fnam);
-    cd(programs_dir);
+    [data, samp_rate] = audioread(strcat(wav_dir, fnam));
     
     disp('Generating Fourier matrix');
     % Step 1: Generate Fourier matrix from .wav file - Details according to
@@ -294,23 +293,10 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     
     %disp('Plotting Data');
     % Step 6: Generate Plot_Data plots
-%     Plot_Data(original, mu, N, t_bounds, pass_band, stop_band, gamma, v1, ...
-%         v2, eta_thresh, eta_noise, intervals.t, X_masked, freq_intervals_sec, noise_intervals.t);
-    
-    % Step 7: Save results as structured array in the form required for
-    % data formatting program
-    
-    % Draft for creating the structured array - Will need to move to after
-    % the associator program because data will need information from all
-    % receivers
-%     data.Array = fnam(6);
-%     data.SoundID = 'Unclear what Sound ID is referring to';
-%     data.numReceivers = 5;
-%     data.fs_mult = 2;
-%     data.FreqBounds = freq_intervals_sec(:, 1);
-%     data.Max_Duration = 60; % For more specific value for a given species, see GPL Google Sheet
-%     data.nrec_sf = [1 2 3 4 5];
-    
+    if plot_GPL_data
+        Plot_Data(original, mu, N, t_bounds, pass_band, stop_band, gamma, v1, ...
+            v2, eta_thresh, eta_noise, intervals.t, X_masked, freq_intervals_sec, noise_intervals.t);
+    end
 end
     
     

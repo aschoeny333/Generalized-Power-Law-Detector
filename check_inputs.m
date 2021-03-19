@@ -72,7 +72,7 @@
 
 function [t_bounds, stop_band, pass_band, eta_thresh, eta_noise, t_min, ...
     noise_thresh, max_noise_dur, min_noise_dur, filter_order] = check_inputs(fnam, ...
-    wav_dir, programs_dir, pass_band, stop_band, t_bounds, gamma, v1, v2, eta_thresh, ...
+    wav_dir, pass_band, stop_band, t_bounds, gamma, v1, v2, eta_thresh, ...
     eta_noise, t_min, noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type)
     
 % Step 0.1: Check class validity of all parameters
@@ -82,10 +82,6 @@ function [t_bounds, stop_band, pass_band, eta_thresh, eta_noise, t_min, ...
     
     if ~(isa(wav_dir, 'string') || isa(wav_dir, 'char'))
         error('Incorrect class of wav_dir. Revise and re-run')
-    end
-    
-    if ~(isa(programs_dir, 'string') || isa(programs_dir, 'char'))
-        error('Incorrect class of programs_dir. Revise and re-run')
     end
     
     if ~isa(t_bounds, 'double')
@@ -145,8 +141,7 @@ function [t_bounds, stop_band, pass_band, eta_thresh, eta_noise, t_min, ...
     end 
     
 % Step 0.2: Read in .wav file
-    cd(wav_dir);
-    [data, samp_rate] = audioread(fnam);
+    [data, samp_rate] = audioread(strcat(wav_dir, fnam));
 
 % Step 0.3: Check validity of t_boundsd
     if t_bounds(1) > t_bounds(2)

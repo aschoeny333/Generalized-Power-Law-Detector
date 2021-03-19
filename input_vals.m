@@ -26,12 +26,13 @@ min_noise_dur = 1;
 filter_order = 10;
 detector_type = 1;
 num_receivers = 5;
+plot_GPL_data = 0;
 
 % Run GPL.m and save results
 [sound, filters, original, whitener_rets, matrices, X_s, intervals, X_masked, ...
     freq_intervals, noise_intervals] = GPL(fnam, wav_dir, programs_dir, pass_band, ...
     stop_band, t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, ...
-    noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type);
+    noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type, plot_GPL_data);
 
 %  Copy the below if re-plotting is necessary, namely with some changes to
 %  the variables saved from running GPL.m

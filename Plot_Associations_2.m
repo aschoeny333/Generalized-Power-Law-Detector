@@ -39,9 +39,8 @@
 %     start and end define the beginning and ending time value in seconds
 %     of the signal identified by the detector
 
-function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
-    t_bounds, pass_band, stop_band, corr_times, sig_intervals, freq_intervals, ...
-    range_starts, range_ends)
+function [] = Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, stop_band, ...
+    corr_times, sig_intervals, freq_intervals, range_starts, range_ends)
 
     figure; 
     
@@ -55,74 +54,72 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     
     ax1 = nexttile;
     
-    cd(wav_dir);
-        [data, samp_rate] = audioread(rec_dict_tseries(1, :));
-        cd(programs_dir);
-        
-        data_bounded = data(1 + round(t_bounds(1) * samp_rate) : ...
-            round(t_bounds(2) * samp_rate));
+    [data, samp_rate] = audioread(rec_dict_tseries(1, :));
 
-        if(pass_band(1)==0)
-            % Low pass filter
-            lpFilt = designfilt('lowpassfir', 'pass_bandFrequency', pass_band(2),...
-                'StopbandFrequency', stop_band(2), 'pass_bandRipple', 1, ...
-                'StopbandAttenuation', 35, 'DesignMethod', 'kaiserwin','SampleRate',samp_rate);
-            data_filtered = filter(lpFilt, data_bounded);
-        else
-            % Bandpass filter
-            filter_order=10;
-            bpFilt = designfilt('bandpassiir','FilterOrder',filter_order, ...
-                'HalfPowerFrequency1',stop_band(1),'HalfPowerFrequency2',stop_band(2), ...
-                'SampleRate', samp_rate);
-            data_filtered = filter(bpFilt, data_bounded);
-        end
+    data_bounded = data(1 + round(t_bounds(1) * samp_rate) : ...
+        round(t_bounds(2) * samp_rate));
 
-        nfft_val = 2 ^ nextpow2(0.05 * samp_rate);
-        [fourier, freqs, times] = spectrogram(data_filtered, nfft_val, 0.75 * nfft_val, ...
-            nfft_val, samp_rate, 'yaxis');
+    if(pass_band(1)==0)
+        % Low pass filter
+        lpFilt = designfilt('lowpassfir', 'pass_bandFrequency', pass_band(2),...
+            'StopbandFrequency', stop_band(2), 'pass_bandRipple', 1, ...
+            'StopbandAttenuation', 35, 'DesignMethod', 'kaiserwin','SampleRate',samp_rate);
+        data_filtered = filter(lpFilt, data_bounded);
+    else
+        % Bandpass filter
+        filter_order=10;
+        bpFilt = designfilt('bandpassiir','FilterOrder',filter_order, ...
+            'HalfPowerFrequency1',stop_band(1),'HalfPowerFrequency2',stop_band(2), ...
+            'SampleRate', samp_rate);
+        data_filtered = filter(bpFilt, data_bounded);
+    end
 
-        hz_per_bin = samp_rate / (2 * (length(freqs) - 1)); % Clarification: range of frequencies is samp_rate / 2
-        trim_rows = round(pass_band / hz_per_bin); 
-        if trim_rows(1) == 0
-            freqs_trimmed = freqs(1 + trim_rows(1):trim_rows(2));
-            fourier_trimmed = fourier(1 + trim_rows(1):trim_rows(2), :);
-        else
-            freqs_trimmed = freqs(trim_rows(1):trim_rows(2));
-            fourier_trimmed = fourier(trim_rows(1):trim_rows(2), :);
-        end
-        
-        X = abs(fourier_trimmed);
-        
-        line_height = max(max(X));
-        
-        surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
-        axis xy; 
-        axis tight; 
-        colormap(jet); view(0,90);
-        if numel(corr_times) == 0
-            % Don't plot any time bound lines
-        elseif length(corr_times(1, :)) == 1
-            verts = [corr_times(1,1) freq_intervals(1, 1) line_height; corr_times(1,1) freq_intervals(2, 1) line_height;...
-                corr_times(1,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) line_height; ...
-                corr_times(1,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
+    nfft_val = 2 ^ nextpow2(0.05 * samp_rate);
+    [fourier, freqs, times] = spectrogram(data_filtered, nfft_val, 0.75 * nfft_val, ...
+        nfft_val, samp_rate, 'yaxis');
+
+    hz_per_bin = samp_rate / (2 * (length(freqs) - 1)); % Clarification: range of frequencies is samp_rate / 2
+    trim_rows = round(pass_band / hz_per_bin); 
+    if trim_rows(1) == 0
+        freqs_trimmed = freqs(1 + trim_rows(1):trim_rows(2));
+        fourier_trimmed = fourier(1 + trim_rows(1):trim_rows(2), :);
+    else
+        freqs_trimmed = freqs(trim_rows(1):trim_rows(2));
+        fourier_trimmed = fourier(trim_rows(1):trim_rows(2), :);
+    end
+
+    X = abs(fourier_trimmed);
+
+    line_height = max(max(X));
+
+    surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
+    axis xy; 
+    axis tight; 
+    colormap(jet); view(0,90);
+    if numel(corr_times) == 0
+        % Don't plot any time bound lines
+    elseif length(corr_times(1, :)) == 1
+        verts = [corr_times(1,1) freq_intervals(1, 1) line_height; corr_times(1,1) freq_intervals(2, 1) line_height;...
+            corr_times(1,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) line_height; ...
+            corr_times(1,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
+        face = [1 2 3 4];
+        patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
+    else
+        for j = 1 : length(corr_times(1, :))
+            verts = [corr_times(1,j) freq_intervals(1, j) line_height; corr_times(1,j) freq_intervals(2, j) line_height;...
+                corr_times(1,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) line_height; ...
+                corr_times(1,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) line_height]; 
             face = [1 2 3 4];
-            patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
-        else
-            for j = 1 : length(corr_times(1, :))
-                verts = [corr_times(1,j) freq_intervals(1, j) line_height; corr_times(1,j) freq_intervals(2, j) line_height;...
-                    corr_times(1,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) line_height; ...
-                    corr_times(1,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) line_height]; 
-                face = [1 2 3 4];
-                color_list = ['r', 'g', 'y', 'w', 'c'];
-                patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5) + 1), ...
-                    'FaceColor', 'none', 'LineWidth', 1);
-            end
+            color_list = ['r', 'g', 'y', 'w', 'c'];
+            patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5) + 1), ...
+                'FaceColor', 'none', 'LineWidth', 1);
         end
-        xlabel('Time (secs)');
-        c = colorbar;
-        ylabel('Frequency(HZ)');
-        ylabel(c, 'Power');
-        title("Associated signals on receiver 1");
+    end
+    xlabel('Time (secs)');
+    c = colorbar;
+    ylabel('Frequency(HZ)');
+    ylabel(c, 'Power');
+    title("Associated signals on receiver 1");
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
@@ -132,9 +129,7 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     
     ax2 = nexttile;
     
-    cd(wav_dir);
     [data, samp_rate] = audioread(rec_dict_tseries(2, :));
-    cd(programs_dir);
 
     data_bounded = data(1 + round(t_bounds(1) * samp_rate) : ...
         round(t_bounds(2) * samp_rate));
@@ -212,9 +207,7 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     
     ax3 = nexttile;
     
-    cd(wav_dir);
     [data, samp_rate] = audioread(rec_dict_tseries(3, :));
-    cd(programs_dir);
 
     data_bounded = data(1 + round(t_bounds(1) * samp_rate) : ...
         round(t_bounds(2) * samp_rate));
@@ -291,10 +284,8 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     ax4 = nexttile;
-    
-    cd(wav_dir);
+
     [data, samp_rate] = audioread(rec_dict_tseries(4, :));
-    cd(programs_dir);
 
     data_bounded = data(1 + round(t_bounds(1) * samp_rate) : ...
         round(t_bounds(2) * samp_rate));
@@ -372,9 +363,7 @@ function [] = Plot_Associations_2(rec_dict_tseries, wav_dir, programs_dir, ...
     
     ax5 = nexttile;
     
-    cd(wav_dir);
     [data, samp_rate] = audioread(rec_dict_tseries(5, :));
-    cd(programs_dir);
 
     data_bounded = data(1 + round(t_bounds(1) * samp_rate) : ...
         round(t_bounds(2) * samp_rate));

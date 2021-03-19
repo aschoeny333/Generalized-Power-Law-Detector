@@ -41,31 +41,31 @@
 %     between the two receivers in meters
 
 function [range, drift_ind, drift_date, drift, dist] = possible_range(fnam, ...
-    rec_j, sig_bound, programs_dir)
+    rec_j, sig_bound, wav_dir)
     
+    wav_dir_path_length = length(wav_dir);
     % Step 1: Determine the receiver array from fnam
-    if (fnam(6) == 'A')
-        clk_bias_path = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/Relevant Input Files/Inshore Clock Bias';
+    if (fnam(wav_dir_path_length + 6) == 'A')
+        clk_bias_path = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/Relevant Input Files/Inshore Clock Bias/';
         array = 1;
     else 
-        clk_bias_path = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/Relevant Input Files/Inshore Clock Bias';
+        clk_bias_path = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/Relevant Input Files/Midshore Clock Bias/';
         array = 2;
     end
 
     % Step 2: Determine clock bias
     % Step 2.1: Load file containing biases time series
-    cd(clk_bias_path)
-    load('posterior_clk_bias_bnds.mat'); %#ok<*LOAD>
+    load(strcat(clk_bias_path, 'posterior_clk_bias_bnds.mat')); %#ok<*LOAD>
     bias_times = post_clk_bias.t_dn;
     biases = post_clk_bias.clk_bias_bnds;
 
     % Step 2.2: Determine the timestamp (ref_date) of the file from fnam
-    year = 2000 + str2double(fnam(10:11));
-    month = str2double(fnam(12:13));
-    day = str2double(fnam(14:15));
-    hour = str2double(fnam(17:18));
-    minute = str2double(fnam(19:20));
-    sec = str2double(fnam(21:22));
+    year = 2000 + str2double(fnam(wav_dir_path_length + 10:wav_dir_path_length + 11));
+    month = str2double(fnam(wav_dir_path_length + 12:wav_dir_path_length + 13));
+    day = str2double(fnam(wav_dir_path_length + 14:wav_dir_path_length + 15));
+    hour = str2double(fnam(wav_dir_path_length + 17:wav_dir_path_length + 18));
+    minute = str2double(fnam(wav_dir_path_length + 19:wav_dir_path_length + 20));
+    sec = str2double(fnam(wav_dir_path_length + 21:wav_dir_path_length + 22));
 
     ref_date = [year, month, day, hour, minute, sec];
 
@@ -123,9 +123,7 @@ function [range, drift_ind, drift_date, drift, dist] = possible_range(fnam, ...
 
     % Step 3: Determine the distance between receivers
     % Step 3.1: Load coordinate locations of both receivers
-    rec_locs_path = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/Relevant Input Files';
-    cd(rec_locs_path);
-    load('rec_locs.mat');
+    load('/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/Relevant Input Files/rec_locs.mat');
 
     if array == 1
         xy_locs = locs(2).bnds(1:5, :);
@@ -175,8 +173,6 @@ function [range, drift_ind, drift_date, drift, dist] = possible_range(fnam, ...
 
     % Step 3.3: Determine the maximum Euclidean distance between the two
     % receivers
-    
-    cd(programs_dir);
     dist = great_circle_distance(lat1, lat2, lon1, lon2);
 
     % Step 4: Determine the possible range on receiver j that must contain

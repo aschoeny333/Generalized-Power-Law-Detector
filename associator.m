@@ -42,7 +42,7 @@
 %     from sig_intervals
     
 function [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, ...
-    corr_type, sig_intervals, filter_order, freq_intervals, wav_dir, programs_dir)
+    corr_type, sig_intervals, filter_order, freq_intervals, wav_dir)
 
     % Before executing the program, ensure that there are detections to
     % associate
@@ -62,7 +62,7 @@ function [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, .
             % Step 2: Iterate through other (non-reference) receivers 
             for j = 2 :length(rec_dict_tseries(:,1))   % Start at 2 bc 1 is always reference   
                 % Step 2.1: Determine interval of investigation on receiver j
-                j_duration = possible_range(rec_dict_tseries(1, :), j, ref_duration, programs_dir);
+                j_duration = possible_range(rec_dict_tseries(1, :), j, ref_duration, wav_dir);
                 range_starts(j,i) = j_duration(1);
                 range_ends(j,i) = j_duration(2);
                 
@@ -70,10 +70,8 @@ function [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, .
                 if corr_type == 1 % 1D, time series correlation
                     % Step 2.2.1: Read in audio time series from the two
                     % receivers
-                    cd(wav_dir)
                     [ref_tseries, samp_rate] = audioread(rec_dict_tseries(1,:)); 
                     j_tseries = audioread(rec_dict_tseries(j,:));
-                    cd(programs_dir)
 
                     % Step 2.2.2: Design bandpass filter according to
                     % detected signal frequency bounds
@@ -134,10 +132,8 @@ function [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, .
                     %%% 1D CORRELATION %%%
                     % Step 2.2.1: Read in audio time series from the two
                     % receivers
-                    cd(wav_dir)
                     [ref_tseries, samp_rate] = audioread(rec_dict_tseries(1,:)); 
                     j_tseries = audioread(rec_dict_tseries(j,:));
-                    cd(programs_dir)
 
                     % Step 2.2.2: Design bandpass filter according to
                     % detected signal frequency bounds
@@ -196,6 +192,8 @@ function [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, .
     else 
         % Return an empty matrix
         corr_times = zeros(length(rec_dict_tseries), 0);
+        range_starts = zeros(size(rec_dict_tseries, 1), size(sig_intervals, 2));
+        range_ends = zeros(size(rec_dict_tseries, 1), size(sig_intervals, 2));
     end    
 end
 

@@ -1,3 +1,0 @@
-Detections_R1,Detections_R1_end,Associations_R2,Associations_R3,Associations_R4,Associations_R5,Freq_1,Freq_2,Noise_1,Noise_2,Pass_band_1,Pass_band_2,Stop_band_1,Stop_band_2,T_bounds_1,T_bounds_2,Gamma,V1,V2,Eta_thresh,Eta_noise,T_min,Noise_thresh,Max_noise_dur,Min_noise_dur
-434.7873671,435.9130707,431.351224,432.1981294,431.9516652,431.1310925,720,768,434.6779237,436.8042527,150,1800,100,1850,375,450,1,1,2,0.000262,2.07E-05,0.35,0.000131,5,1
-436.30394,436.6948093,432.8504629,433.7081715,435.8648445,432.6396697,576,704,436.1788618,441.6979362,150,1800,100,1850,375,450,1,1,2,0.000262,2.07E-05,0.35,0.000131,5,1

@@ -1,7 +1,8 @@
 function [] = save_data_format(corr_times, noise_intervals, rec_dict_tseries, ...
-    wav_dir, programs_dir, t_bounds, pass_band, stop_band, filter_order, gamma, v1, v2, ...
-    noise_thresh, max_noise_dur, min_noise_dur, sig_intervals, freq_intervals)
+    t_bounds, pass_band, stop_band, filter_order, gamma, v1, v2, ...
+    noise_thresh, max_noise_dur, min_noise_dur, sig_intervals, freq_intervals, wav_dir)
 
+length_wav_dir = length(wav_dir);
 noise_intervals_start = zeros(size(corr_times));
 noise_intervals_end = zeros(size(corr_times));
 noise_intervals_start(1, :) = noise_intervals(1,:);
@@ -11,9 +12,7 @@ num_receivers = length(rec_dict_tseries(:,1));
 
 for i=2:num_receivers
     cur_fnam = rec_dict_tseries(i, :);
-    cd(wav_dir);
     [data, samp_rate] = audioread(cur_fnam);
-    cd(programs_dir);
     
     data_bounded = data(1 + round(t_bounds(1) * samp_rate) : round(t_bounds(2) * samp_rate));
 
@@ -69,7 +68,7 @@ for i=2:num_receivers
 end
 
 for i=1:length(sig_intervals(1,:))
-    array_letter = rec_dict_tseries(1, 6);
+    array_letter = rec_dict_tseries(1, end - 20);
     
     sound_id = 'Automatic Detection'; 
     
@@ -92,7 +91,7 @@ for i=1:length(sig_intervals(1,:))
     recn = 1:num_receivers;
     recn = num2str(recn);
     
-    fnam = rec_dict_tseries(1, :);
+    fnam = rec_dict_tseries(1, length_wav_dir+1:end);
     year = 2000 + str2double(fnam(10:11));
     month = str2double(fnam(12:13));
     day = str2double(fnam(14:15));
@@ -155,10 +154,5 @@ for i=1:length(sig_intervals(1,:))
     writematrix(export, export_file_name);
 end
 
-
-% % TO DO: 
-%    - write script to find noise bounds for signals on other receivers
-%    - loop over each signal and create above data package
-%    - Generalize program to n receivers - n as input arg?
 
 
