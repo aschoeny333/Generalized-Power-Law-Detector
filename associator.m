@@ -56,6 +56,7 @@ function [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, .
         
         % Iterate through the detections on the reference receiver
         for i = 1:length(sig_intervals(1, :))
+            disp('Associating a detection');
             % Step 1: Determine interval of investigation on reference receiver
             ref_duration = sig_intervals(:, i);
 

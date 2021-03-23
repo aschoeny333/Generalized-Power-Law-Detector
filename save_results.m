@@ -67,7 +67,7 @@ for file = test_files'
         disp('Starting New .wav File');
         disp('**********************');
         
-        disp('----- Detector -----');
+        disp('------ Detector ------');
         % Run GPL Detector
         [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
             X_masked, freq_intervals, noise_intervals] = GPL(file.name, wav_dir, pass_band, ...
@@ -142,8 +142,18 @@ for file = test_files'
         Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, ...
             stop_band, corr_times, intervals.t, freq_intervals, range_starts, range_ends);
         
+        save_detection_jpgs(rec_dict_tseries, pass_band, stop_band, ...
+            corr_times, intervals.t, freq_intervals, range_starts, range_ends);
+
+        
         % Update looping variables
         seen_files(num_seen_files + 1 : num_seen_files + num_receivers, :) = rec_dict_tseries;
         num_seen_files = num_seen_files + num_receivers;
+        
+    end
+    
+    if num_seen_files == length(seen_files(:,1))
+        disp('All files seen');
+        break
     end
 end
