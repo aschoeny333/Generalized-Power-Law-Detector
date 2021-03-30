@@ -184,7 +184,7 @@
 function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     X_masked, freq_intervals_sec, noise_intervals] = GPL(fnam, wav_dir, pass_band, stop_band, ...
     t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, noise_thresh, ...
-    max_noise_dur, min_noise_dur, filter_order, detector_type, plot_GPL_data)
+    max_noise_dur, min_noise_dur, filter_order, detector_type, plot_GPL_data, old_ts)
     
 %     Step 0: Check validity of inputs, change as necessary
     disp('Checking validity of inputs');
@@ -262,7 +262,11 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
 
     %     Step 2.2: Determine matrices A, B, N
     % A is fixed-column whitening, B is fixed-row whitening
-    [A, B, N] = test_stat(X, mu, gamma, v1, v2);
+    if old_ts
+        [A, B, N] = test_stat(X, mu, gamma, v1, v2);
+    else
+        [A, B, N] = new_test_stat(X, mu, gamma, v1, v2);
+    end
 
     matrices.A = A;
     matrices.B = B;
@@ -272,7 +276,7 @@ function [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
     % Step 3: Run the detector
     if detector_type == 1
         [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, eta_noise, ...
-            t_min, t_bounds, N, mu);
+            t_min, t_bounds, N, mu, old_ts);
     else 
         intervals = detector_simple(X, eta_thresh, eta_noise, t_min, t_bounds, N);
         X_s = [];

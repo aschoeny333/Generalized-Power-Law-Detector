@@ -52,6 +52,10 @@ function [freq_intervals] = box_freq(X_masked, sig_intervals)
             end
             
             % Store results in freq_intervals
+            if min_freq == max_freq
+                max_freq = min_freq + 1;
+            end
+            
             freq_intervals(:, i) = [min_freq; max_freq];
         end
     end

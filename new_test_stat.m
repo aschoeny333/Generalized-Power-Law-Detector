@@ -49,25 +49,13 @@
 %     by eq 6 in Helble et al. (2012) p.2685
 
 
-function [A, B, N] = test_stat(X, mu, gamma, v1, v2)
-    [rows, cols] = size(X);
-    A = zeros(rows, cols);
-        for r = 1:rows
-            for c = 1:cols
-                num = abs(X(r,c) ^ gamma - mu(r, 1));
-                denom_arg = X(:, c) .^ gamma - mu;
-                
-                A(r, c)= num / sqrt(sum(denom_arg .^ 2));
-            end
-        end
-    B = zeros(rows, cols);
-        for r = 1:rows
-            for c = 1:cols
-                num = abs(X(r,c) ^ gamma - mu(r, 1));
-                denom_arg = abs(X(r, :) .^ gamma - mu(r, 1));
-                
-                
-                B(r, c)= num / sqrt(sum(denom_arg .^ 2));
-            end
-        end
+function [A, B, N] = new_test_stat(X, mu, gamma, v1, v2)
+    X_whitened = X.^gamma - mu;
+    
+    denom_arg_A = sqrt(sum(X_whitened.^ 2, 1));
+    A = abs(X_whitened) ./ denom_arg_A;
+    
+    denom_arg_B = sqrt(sum(X_whitened.^ 2, 2));
+    B = abs(X_whitened) ./ denom_arg_B;
+    
     N = (A .^ (2 * v1)) .* (B .^ (2 * v2));

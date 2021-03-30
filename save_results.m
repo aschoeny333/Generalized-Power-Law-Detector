@@ -27,7 +27,7 @@ for file = test_files'
     % Assign values to detector input parameters
     pass_band = [150 1800];
     stop_band = [100 1850];
-    t_bounds = [375 450];
+    t_bounds = [0 600];
     gamma = 1;
     v1 = 1;
     v2 = 2;
@@ -41,6 +41,7 @@ for file = test_files'
     detector_type = 1;
     num_receivers = 5;
     plot_GPL_data = 0;
+    old_ts = false;
     
     % Assign values to associator input parameters
     rec_dict_tseries = zeros(num_receivers, length(wav_dir) + length(file.name));
@@ -72,7 +73,8 @@ for file = test_files'
         [sound, filters, original, whitener_rets, matrices, X_s, intervals, ...
             X_masked, freq_intervals, noise_intervals] = GPL(file.name, wav_dir, pass_band, ...
             stop_band, t_bounds, gamma, v1, v2, eta_thresh, eta_noise, t_min, ...
-            noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type, plot_GPL_data);
+            noise_thresh, max_noise_dur, min_noise_dur, filter_order, detector_type, ...
+            plot_GPL_data, old_ts);
 
         disp('----- Associator -----');
         % Run Associator
@@ -135,7 +137,8 @@ for file = test_files'
         % Export data in correct format
         save_data_format(corr_times, noise_intervals.t, rec_dict_tseries, ...
             t_bounds, pass_band, stop_band, filter_order, gamma, v1, v2, ...
-            noise_thresh, max_noise_dur, min_noise_dur, intervals.t, freq_intervals, wav_dir);
+            noise_thresh, max_noise_dur, min_noise_dur, intervals.t, freq_intervals, ...
+            wav_dir, old_ts);
 
         disp('----- Plotting Associations -----');
         % Plot associations

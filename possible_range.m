@@ -45,6 +45,8 @@ function [range, drift_ind, drift_date, drift, dist] = possible_range(fnam, ...
     
     wav_dir_path_length = length(wav_dir);
     % Step 1: Determine the receiver array from fnam
+    % Note: clk_bias_path must include trailing / so they can be used as
+    % concatenation prefix for reading / loading various files
     if (fnam(wav_dir_path_length + 6) == 'A')
         clk_bias_path = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/Relevant Input Files/Inshore Clock Bias/';
         array = 1;
@@ -122,7 +124,9 @@ function [range, drift_ind, drift_date, drift, dist] = possible_range(fnam, ...
     end
 
     % Step 3: Determine the distance between receivers
-    % Step 3.1: Load coordinate locations of both receivers
+    % Step 3.1: Load coordinate locations of both receivers, a file in the
+    % same format as rec_locs.mat as defined by Dr. Spiesberger
+    % make_rec_locs_mat_chaoz.m
     load('/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev/Relevant Input Files/rec_locs.mat');
 
     if array == 1

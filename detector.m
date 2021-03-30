@@ -161,7 +161,7 @@
 %     signal_intervals that have duration at least t_min
 
 function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
-    eta_noise, t_min, t_bounds, N, mu)
+    eta_noise, t_min, t_bounds, N, mu, old_ts)
 
     % Step 1: Preprocessing to determine X_s as defined on page 2691
 
@@ -182,7 +182,13 @@ function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
     % columns
     X_s(:, col_counter : end) = [];
     mu_s = whitener(X_s);
-    [~, ~, N_s] = test_stat(X_s, mu_s, gamma, v1, v2);
+    
+    if old_ts
+        [~, ~, N_s] = test_stat(X_s, mu_s, gamma, v1, v2);
+    else
+        [~, ~, N_s] = new_test_stat(X_s, mu_s, gamma, v1, v2);
+    end
+    
     test_stat_s = sum(N_s);
 
     % Step 1.3 - Remove columns of X_s with test statistic greater than
@@ -263,7 +269,13 @@ function [X_s, intervals] = detector(X, gamma, v1, v2, eta_thresh, ...
             dif_ind_below = 0;
             dif_ind_above = 0;
             cur_mu = whitener(cur_matrix);
-            [~, ~, cur_N] = test_stat(cur_matrix, cur_mu, gamma, v1, v2);
+            
+            if old_ts
+                [~, ~, cur_N] = test_stat(cur_matrix, cur_mu, gamma, v1, v2);
+            else
+                [~, ~, cur_N] = new_test_stat(cur_matrix, cur_mu, gamma, v1, v2);
+            end
+            
             cur_test_stat = sum(cur_N);
             [max_ts, max_ind] = max(cur_test_stat);
         end

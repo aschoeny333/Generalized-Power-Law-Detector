@@ -11,6 +11,13 @@ function [] = save_detection_jpgs(rec_dict_tseries, pass_band, stop_band, ...
         for j = 1:length(rec_dict_tseries(:,1))
             subplot(length(rec_dict_tseries(:,1)), 1, j)
             [data, samp_rate] = audioread(rec_dict_tseries(j, :));
+            
+            if earliest_time < 1
+                earliest_time = 1;
+            end
+            if latest_time > length(data) / samp_rate - 1
+                latest_time = length(data) / samp_rate - 1;
+            end
 
             data_bounded = data(1 + round((earliest_time - 1) * samp_rate) : ...
                 round((latest_time + 1) * samp_rate));

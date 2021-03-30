@@ -1,6 +1,6 @@
 function [noise_intervals_start, noise_intervals_end] = save_data_format(corr_times, noise_intervals, rec_dict_tseries, ...
     t_bounds, pass_band, stop_band, filter_order, gamma, v1, v2, ...
-    noise_thresh, max_noise_dur, min_noise_dur, sig_intervals, freq_intervals, wav_dir)
+    noise_thresh, max_noise_dur, min_noise_dur, sig_intervals, freq_intervals, wav_dir, old_ts)
 
 length_wav_dir = length(wav_dir);
 noise_intervals_start = zeros(size(corr_times));
@@ -51,7 +51,12 @@ for i=2:num_receivers
     X = abs(fourier_trimmed);
     mu = whitener(X);
     disp('Calculating test statistic to determine noise windows');
-    cur_test_stat = test_stat(X, mu, gamma, v1, v2);
+    
+    if old_ts
+        [~, ~, cur_test_stat] = test_stat(X, mu, gamma, v1, v2);
+    else
+        [~, ~, cur_test_stat] = new_test_stat(X, mu, gamma, v1, v2);
+    end
     
     [~, cols] = size(X);
     sig_intervals_i = zeros(size(sig_intervals));
