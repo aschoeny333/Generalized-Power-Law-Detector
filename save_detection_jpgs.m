@@ -80,6 +80,6 @@ function [] = save_detection_jpgs(rec_dict_tseries, pass_band, stop_band, ...
 
         end
         save_name = strcat(rec_dict_tseries(1, end-25:end-4), '_signal_', num2str(i), '.jpg');
-        saveas(gcf, save_name);
+        exportgraphics(gcf, save_name, 'Resolution', 500);
         clf; close;
     end

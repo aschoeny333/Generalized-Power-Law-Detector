@@ -126,17 +126,29 @@ for i=1:length(sig_intervals(1,:))
     start_of_noise(:, 6) = ones(num_receivers, 1) .* second_noise_start;
     start_of_noise = num2str(start_of_noise);
     
-    start_of_signal = start_of_noise;
+    start_of_signal = zeros(num_receivers, 6);
+    start_of_signal(:, 1) = ones(num_receivers, 1) * year;
+    start_of_signal(:, 2) = ones(num_receivers, 1) * month;
+    start_of_signal(:, 3) = ones(num_receivers, 1) * day;
+    start_of_signal(:, 4) = ones(num_receivers, 1) * hour;
     start_of_signal(:, 5) = ones(num_receivers, 1) .* (minute + add_min_signal_start);
     start_of_signal(:, 6) = ones(num_receivers, 1) .* second_signal_start;
     start_of_signal = num2str(start_of_signal);
     
-    end_of_signal = start_of_noise;
+    end_of_signal = zeros(num_receivers, 6);
+    end_of_signal(:, 1) = ones(num_receivers, 1) * year;
+    end_of_signal(:, 2) = ones(num_receivers, 1) * month;
+    end_of_signal(:, 3) = ones(num_receivers, 1) * day;
+    end_of_signal(:, 4) = ones(num_receivers, 1) * hour;
     end_of_signal(:, 5) = ones(num_receivers, 1) .* (minute + add_min_signal_end);
     end_of_signal(:, 6) = ones(num_receivers, 1) .* second_signal_end;
     end_of_signal = num2str(end_of_signal);
     
-    end_of_noise = start_of_noise;
+    end_of_noise = zeros(num_receivers, 6);
+    end_of_noise(:, 1) = ones(num_receivers, 1) * year;
+    end_of_noise(:, 2) = ones(num_receivers, 1) * month;
+    end_of_noise(:, 3) = ones(num_receivers, 1) * day;
+    end_of_noise(:, 4) = ones(num_receivers, 1) * hour;
     end_of_noise(:, 5) = ones(num_receivers, 1) .* (minute + add_min_noise_end);
     end_of_noise(:, 6) = ones(num_receivers, 1) .* second_noise_end;
     end_of_noise = num2str(end_of_noise);
