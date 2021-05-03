@@ -27,7 +27,7 @@ for file = test_files'
     % Assign values to detector input parameters
     pass_band = [150 1800];
     stop_band = [100 1850];
-    t_bounds = [0 600];
+    t_bounds = [400 450];
     gamma = 1;
     v1 = 1;
     v2 = 2;
@@ -39,9 +39,13 @@ for file = test_files'
     min_noise_dur = 1;
     filter_order = 10;
     detector_type = 1;
+    associator_type = 2;
     num_receivers = 5;
     plot_GPL_data = 0;
     old_ts = false;
+    max_gap = 3;
+    criteria = 1;
+    combine_rule = 1;
     
     % Assign values to associator input parameters
     rec_dict_tseries = zeros(num_receivers, length(wav_dir) + length(file.name));
@@ -78,8 +82,19 @@ for file = test_files'
 
         disp('----- Associator -----');
         % Run Associator
-        [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, ...
-            corr_type, intervals.t, filter_order, freq_intervals, wav_dir);
+        if associator_type == 1
+            [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, ...
+                corr_type, intervals.t, filter_order, freq_intervals, wav_dir);
+        else
+            [corr_times, range_starts, range_ends, new_sig_intervals, new_freq_intervals, ...
+                new_noise_intervals] = associator_combining(rec_dict_tseries, ...
+                corr_type, intervals.t, filter_order, freq_intervals, wav_dir, noise_intervals.t, ...
+                max_gap, criteria, combine_rule);
+            
+            freq_intervals = new_freq_intervals;
+            intervals.t = new_sig_intervals;
+            noise_intervals.t = new_noise_intervals;
+        end
 
         disp('----- Saving Results -----');
         % Save detector outputs and input parameters in a table
@@ -143,7 +158,7 @@ for file = test_files'
         disp('----- Plotting Associations -----');
         % Plot associations
         Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, ...
-            stop_band, corr_times, intervals.t, freq_intervals, range_starts, range_ends);
+            stop_band, corr_times, new_sig_intervals, new_freq_intervals, range_starts, range_ends);
         
         save_detection_jpgs(rec_dict_tseries, pass_band, stop_band, ...
             corr_times, intervals.t, freq_intervals, range_starts, range_ends);

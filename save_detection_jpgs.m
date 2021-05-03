@@ -80,6 +80,11 @@ function [] = save_detection_jpgs(rec_dict_tseries, pass_band, stop_band, ...
 
         end
         save_name = strcat(rec_dict_tseries(1, end-25:end-4), '_signal_', num2str(i), '.jpg');
-        exportgraphics(gcf, save_name, 'Resolution', 500);
+        vers_string = version;
+        if str2double(vers_string(17:20)) > 2019
+            exportgraphics(gcf, save_name, 'Resolution', 500);
+        else
+            saveas(gcf, save_name);
+        end
         clf; close;
     end

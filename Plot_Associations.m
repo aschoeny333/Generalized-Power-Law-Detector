@@ -46,7 +46,9 @@ function [] = Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, ...
     figure; 
     num_receivers = length(rec_dict_tseries(:,1));
     
+    % Iterate through receiver subplots
     for i = 1:num_receivers
+        % Read in and filter the time series
         cd(wav_dir);
         [data, samp_rate] = audioread(rec_dict_tseries(i, :));
         cd(programs_dir);
@@ -68,7 +70,9 @@ function [] = Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, ...
                 'SampleRate', samp_rate);
             data_filtered = filter(bpFilt, data_bounded);
         end
-
+        
+        % Generate spectrogram matrix, trimmed according to input
+        % parameters
         nfft_val = 2 ^ nextpow2(0.05 * samp_rate);
         [fourier, freqs, times] = spectrogram(data_filtered, nfft_val, 0.75 * nfft_val, ...
             nfft_val, samp_rate, 'yaxis');
@@ -85,6 +89,7 @@ function [] = Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, ...
         
         X = abs(fourier_trimmed);
         
+        % Plot the spectrogram
         subplot(num_receivers, 1, i)
         surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
         axis xy; 
@@ -93,14 +98,7 @@ function [] = Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, ...
         if numel(corr_times) == 0
             % Don't plot any time bound lines
         elseif length(corr_times(1, :)) == 1
-%             xline(corr_times(i, 1), 'color', 'r', 'LineWidth', 2);
-%             xline(corr_times(i, 1) + sig_intervals(2,1) - sig_intervals(1,1), ...
-%                 'color', 'r', 'LineWidth', 2);
-    %         yline(freq_intervals(1, 1), 'color', 'g', 'LineWidth', 2);
-    %         yline(freq_intervals(2, 1), 'color', 'r', 'LineWidth', 2);
-%             rectangle('Position', [corr_times(i,1), freq_intervals(1,1), ...
-%                 sig_intervals(2,1) - sig_intervals(1,1), freq_intervals(2,1) - freq_intervals(1,1)], ...
-%                 'EdgeColor', 'r', 'LineWidth', 2); 
+            % Plot a rectangle around the detection
             verts = [corr_times(i,1) freq_intervals(1, 1) 5; corr_times(i,1) freq_intervals(2, 1) 5;...
                 corr_times(i,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(2, 1) 5; ...
                 corr_times(i,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) 5]; 
@@ -113,14 +111,7 @@ function [] = Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, ...
             end
         else
             for j = 1 : length(corr_times(1, :))
-%                 xline(corr_times(i, j), 'color', 'r', 'LineWidth', 2);
-%                 xline(corr_times(i, j) + sig_intervals(2,j) - sig_intervals(1,j), ...
-%                     'color', 'r', 'LineWidth', 2);
-    %             yline(freq_intervals(1, i), 'color', 'g', 'LineWidth', 2);
-    %             yline(freq_intervals(2, i), 'color', 'r', 'LineWidth', 2);
-%                 rectangle('Position', [corr_times(i, j), freq_intervals(1,j), ...
-%                 sig_intervals(2,j) - sig_intervals(1,j), freq_intervals(2,j) - freq_intervals(1,j)], ...
-%                 'EdgeColor', 'r', 'LineWidth', 2); 
+                % Plot a rectangle around the detection
                 verts = [corr_times(i,j) freq_intervals(1, j) 5; corr_times(i,j) freq_intervals(2, j) 5;...
                     corr_times(i,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(2, j) 5; ...
                     corr_times(i,j)+(sig_intervals(2,j)-sig_intervals(1,j)) freq_intervals(1, j) 5]; 
@@ -129,12 +120,16 @@ function [] = Plot_Associations(rec_dict_tseries, wav_dir, programs_dir, ...
                 patch('Faces', face, 'Vertices', verts, 'EdgeColor', color_list(mod(j,5) + 1), ...
                     'FaceColor', 'none', 'LineWidth', 1);
                 
+                % If not the reference receiver, plot the bounds of the
+                % association range
                 if i ~= 1
                     xline(range_starts(i,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
                     xline(range_ends(i,j), '--', 'color', color_list(mod(j, 5) + 1), 'LineWidth', 2);
                 end
             end
         end
+        
+        % Label the plot accordingly
         xlabel('Time (secs)');
         c = colorbar;
         ylabel('Frequency(HZ)');

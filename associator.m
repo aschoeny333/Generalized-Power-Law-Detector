@@ -104,7 +104,19 @@ function [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, .
 
                     % Step 2.2.5: Determine the cross-correlation and
                     % associated lag values
-                    [r, lags] = xcorr(j_tseries_filt, ref_tseries_filt);
+                    j_length = length(j_tseries_filt);
+                    ref_length = length(ref_tseries_filt);
+                    
+                    if j_length > ref_length
+                        append_zeros = zeros(j_length - ref_length, 1);
+                        ref_tseries_filt = [ref_tseries_filt; append_zeros];
+                    end
+                    if ref_length > j_length
+                        append_zeros = zeros(ref_length - j_length, 1);
+                        j_tseries_filt = [j_tseries_filt; append_zeros];
+                    end
+   
+                    [r, lags] = xcorr(j_tseries_filt, ref_tseries_filt, 'normalized');
 
                     % Step 2.2.6: Find max of r and associated lag - be
                     % careful about order of arguments used in xcorr

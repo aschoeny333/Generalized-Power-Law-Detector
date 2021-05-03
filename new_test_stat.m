@@ -52,10 +52,13 @@
 function [A, B, N] = new_test_stat(X, mu, gamma, v1, v2)
     X_whitened = X.^gamma - mu;
     
+    % Generate matrix A
     denom_arg_A = sqrt(sum(X_whitened.^ 2, 1));
     A = abs(X_whitened) ./ denom_arg_A;
     
+    % Generate matrix B
     denom_arg_B = sqrt(sum(X_whitened.^ 2, 2));
     B = abs(X_whitened) ./ denom_arg_B;
     
+    % Generate test statistic
     N = (A .^ (2 * v1)) .* (B .^ (2 * v2));

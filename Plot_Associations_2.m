@@ -39,7 +39,7 @@
 %     start and end define the beginning and ending time value in seconds
 %     of the signal identified by the detector
 
-function [] = Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, stop_band, ...
+function [X_jawn] = Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, stop_band, ...
     corr_times, sig_intervals, freq_intervals, range_starts, range_ends)
 
     figure; 
@@ -91,6 +91,7 @@ function [] = Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, stop_ba
     X = abs(fourier_trimmed);
 
     line_height = max(max(X));
+    X_jawn = X;
 
     surf(times + t_bounds(1), freqs_trimmed, X, 'EdgeColor', 'none');
     axis xy; 
