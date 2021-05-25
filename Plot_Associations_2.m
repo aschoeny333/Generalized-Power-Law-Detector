@@ -179,6 +179,9 @@ function [X_jawn] = Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, s
             corr_times(2,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
         face = [1 2 3 4];
         patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
+        
+        xline(range_starts(2,1), '--', 'color', 'r', 'LineWidth', 2);
+        xline(range_ends(2,1), '--', 'color', 'r', 'LineWidth', 2);
     else
         for j = 1 : length(corr_times(1, :))
             verts = [corr_times(2,j) freq_intervals(1, j) line_height; corr_times(2,j) freq_intervals(2, j) line_height;...
@@ -257,6 +260,9 @@ function [X_jawn] = Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, s
             corr_times(3,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
         face = [1 2 3 4];
         patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
+        
+        xline(range_starts(3,1), '--', 'color', 'r', 'LineWidth', 2);
+        xline(range_ends(3,1), '--', 'color', 'r', 'LineWidth', 2);
     else
         for j = 1 : length(corr_times(1, :))
             verts = [corr_times(3,j) freq_intervals(1, j) line_height; corr_times(3,j) freq_intervals(2, j) line_height;...
@@ -335,6 +341,9 @@ function [X_jawn] = Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, s
             corr_times(4,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
         face = [1 2 3 4];
         patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
+        
+        xline(range_starts(4,1), '--', 'color', 'r', 'LineWidth', 2);
+        xline(range_ends(4,1), '--', 'color', 'r', 'LineWidth', 2);
     else
         for j = 1 : length(corr_times(1, :))
             verts = [corr_times(4,j) freq_intervals(1, j) line_height; corr_times(4,j) freq_intervals(2, j) line_height;...
@@ -413,6 +422,9 @@ function [X_jawn] = Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, s
             corr_times(5,1)+(sig_intervals(2,1)-sig_intervals(1,1)) freq_intervals(1, 1) line_height]; 
         face = [1 2 3 4];
         patch('Faces', face, 'Vertices', verts, 'EdgeColor', 'r', 'FaceColor', 'none', 'LineWidth', 2);
+        
+        xline(range_starts(5,1), '--', 'color', 'r', 'LineWidth', 2);
+        xline(range_ends(5,1), '--', 'color', 'r', 'LineWidth', 2);
     else
         for j = 1 : length(corr_times(1, :))
             verts = [corr_times(5,j) freq_intervals(1, j) line_height; corr_times(5,j) freq_intervals(2, j) line_height;...

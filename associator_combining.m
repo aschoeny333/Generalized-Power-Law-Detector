@@ -196,7 +196,7 @@ function [corr_times, range_starts, range_ends, new_sig_intervals, new_freq_inte
                 noise_intervals(:, i+1:i+combination_count) = [];
             end
             
-            if i == length(sig_intervals)
+            if i == length(sig_intervals(1, :))
                 break;
             end     
         end   

@@ -42,9 +42,9 @@ for file = test_files'
     associator_type = 2;
     num_receivers = 5;
     plot_GPL_data = 0;
-    old_ts = false;
+    old_ts = false; % Keep as false
     max_gap = 3;
-    criteria = 1;
+    criteria = 2;
     combine_rule = 1;
     
     % Assign values to associator input parameters
@@ -158,10 +158,10 @@ for file = test_files'
         disp('----- Plotting Associations -----');
         % Plot associations
         Plot_Associations_2(rec_dict_tseries, t_bounds, pass_band, ...
-            stop_band, corr_times, new_sig_intervals, new_freq_intervals, range_starts, range_ends);
-        
-        save_detection_jpgs(rec_dict_tseries, pass_band, stop_band, ...
-            corr_times, intervals.t, freq_intervals, range_starts, range_ends);
+            stop_band, corr_times, intervals.t, freq_intervals, range_starts, range_ends);
+%         
+%         save_detection_jpgs(rec_dict_tseries, pass_band, stop_band, ...
+%             corr_times, intervals.t, freq_intervals, range_starts, range_ends);
 
         
         % Update looping variables
