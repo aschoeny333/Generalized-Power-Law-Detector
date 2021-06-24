@@ -13,6 +13,29 @@ wav_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - De
 programs_dir = '/Users/Alex_Schoeny/Desktop/Research/GPL/Programs and Test Files - Dev';
 addpath(programs_dir);
 
+% Assign values to detector input parameters
+pass_band = [150 1800];
+stop_band = [100 1850];
+t_bounds = [400 450];
+gamma = 1;
+v1 = 1;
+v2 = 2;
+eta_thresh = 2.62 * 10^-4 * (75 / (t_bounds(2) - t_bounds(1)))^2;
+eta_noise = 2.07 * 10^-5 * (75 / (t_bounds(2) - t_bounds(1)))^2;
+t_min = 0.35;
+noise_thresh = eta_thresh / 2;
+max_noise_dur = 5;
+min_noise_dur = 1;
+filter_order = 10;
+detector_type = 1;
+associator_type = 2;
+num_receivers = 5;
+plot_GPL_data = 0;
+old_ts = 0; % Keep as false
+max_gap = 3;
+criteria = 1;
+combine_rule = 1;
+
 test_files = dir(fullfile(wav_dir, '*.wav'));
 if isempty(test_files)
     disp('No files in wav_dir');
@@ -24,29 +47,6 @@ num_seen_files = 0;
 
 % Iterate through .wav files in wav_dir
 for file = test_files'
-    % Assign values to detector input parameters
-    pass_band = [150 1800];
-    stop_band = [100 1850];
-    t_bounds = [400 450];
-    gamma = 1;
-    v1 = 1;
-    v2 = 2;
-    eta_thresh = 2.62 * 10^-4 * (75 / (t_bounds(2) - t_bounds(1)))^2;
-    eta_noise = 2.07 * 10^-5 * (75 / (t_bounds(2) - t_bounds(1)))^2;
-    t_min = 0.35;
-    noise_thresh = eta_thresh / 2;
-    max_noise_dur = 5;
-    min_noise_dur = 1;
-    filter_order = 10;
-    detector_type = 1;
-    associator_type = 2;
-    num_receivers = 5;
-    plot_GPL_data = 0;
-    old_ts = false; % Keep as false
-    max_gap = 3;
-    criteria = 2;
-    combine_rule = 1;
-    
     % Assign values to associator input parameters
     rec_dict_tseries = zeros(num_receivers, length(wav_dir) + length(file.name));
     rec_dict_tseries(1, :) = strcat(wav_dir, file.name);

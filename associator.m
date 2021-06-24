@@ -91,7 +91,7 @@ function [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, .
                     j_tseries_filt = filter(bpFilt, j_tseries);
                     
                     if j_duration(1) < 0
-                        j_duration(2) = 0;
+                        j_duration(1) = 0;
                         disp("WARNING: Association range on receiver " + int2str(j) + ", signal " + int2str(i) + " extends before start of audio file, signal detection may fail");
                     end
                     if j_duration(2) > length(j_tseries_filt) / samp_rate

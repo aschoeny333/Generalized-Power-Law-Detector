@@ -51,26 +51,26 @@
 %     imply a signal does not exist in that time bin. Derived largely in
 %     sections IIIB-D in Helble et al. Exact value given in Section IV
 %     (2.07 * 10^-5), Helble et al. (2012) p. 2690
-%
+% 
 %     noise_thresh - 1 x 1 double, value of test statistic above which
 %     noise interval iteration procedure stops. Not referenced in either
 %     Helble paper, but consider using eta_noise
-%
+% 
 %     max_noise_dur - 1 x 1 double, value in seconds that the length of the
 %     noise bounds cannot exceed
 %  
 %     min_noise_dur - 1 x 1 double, value in seconds that the length of the
 %     noise bounds must exceed
-%
+% 
 %     filter_order - 1 x 1 double, input argument for Matlab function
 %     designfilt, suggested value of 10
-%
+% 
 %     detector_type - 1 x 1 double. If 1, runs detector.m, which replaces
 %     each individual detection with columns containing noise conditions
 %     and then recalculates test statistic (hence is better suited for data
 %     with many signals, has longer runtime). If any other value, runs
 %     detector_simple.m, which does not replace columns of detections
-%
+
 % Outputs
 %
 %     A note on size definitions: Some matrices and arrays sizes are

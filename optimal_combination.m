@@ -22,7 +22,7 @@ function [optimal_combination_num, optimal_combination_time, optimal_combination
         range_end_times = zeros(1, num_sigs_to_check + 1);
 
 
-        % SNR Case
+        % Normalized Cross-Correlation Case
         if criteria == 1
             for i = 0:num_sigs_to_check
                 % Create filter for both time series
@@ -78,14 +78,13 @@ function [optimal_combination_num, optimal_combination_time, optimal_combination
                 % Compute signal to noise ration, approximated by the ratio of
                 % maximum to median correlation values
                 [max_r, t_lag_1D_ind] = max(r);
-                t_lag_1D = lags(t_lag_1D_ind);
-                med_r = median(abs(r));     
+                t_lag_1D = lags(t_lag_1D_ind);    
 
-                criteria_vals(i + 1) = max_r / med_r;
+                criteria_vals(i + 1) = max_r;
                 criteria_val_times(i + 1) = t_lag_1D;
             end
 
-        % Cross-Correlation Case
+        % SNR Case
         else
             % Determine the number of 0's to append to each time series so
             % all are the same length as the maximum combination

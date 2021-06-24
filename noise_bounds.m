@@ -84,14 +84,19 @@ function [noise_intervals] = noise_bounds(sig_intervals, test_stat, cols, ...
             while test_stat(sig_intervals(1, i) - dif_ind_below) < noise_thresh
                 % Check if noise bounds are too long yet
                 if dif_ind_below > max_noise_dur * bins_per_sec
-%                     disp('Max length reached');
+                    disp('Max length reached');
                     break
                 end
                 
                 % Check if noise bounds encroaching on previous signal or
-                % end of matrix reached
+                % beginning of matrix reached
                 if sig_intervals(1, i) - dif_ind_below == prev_sig
-%                     disp('Previous signal or end of matrix reached');
+                    disp('Previous signal reached');
+                    break
+                end
+                
+                if sig_intervals(1, i) - dif_ind_below == 1
+                    disp('Beginning of the audio file reached');
                     break
                 end
                 
@@ -103,14 +108,19 @@ function [noise_intervals] = noise_bounds(sig_intervals, test_stat, cols, ...
             while test_stat(sig_intervals(2,i) + dif_ind_above) < noise_thresh
                 % Check if noise bounds are too long yet
                 if dif_ind_above > max_noise_dur * bins_per_sec
-%                     disp('Max length reached');
+                    disp('Max length reached');
                     break
                 end
                 
                 % Check if noise bounds encroaching on next signal or end
                 % of matrix reached
                 if sig_intervals(2, i) + dif_ind_above == next_sig
-%                     disp('Next signal  or end of matrix reached');
+                    disp('Next signal reached');
+                    break
+                end
+                
+                if sig_intervals(2, i) + dif_ind_above == length(test_stat)
+                    disp('End of audio file reached');
                     break
                 end
          
