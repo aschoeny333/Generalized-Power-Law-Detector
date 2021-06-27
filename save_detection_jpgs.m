@@ -1,3 +1,10 @@
+% Save .jpg files of the spectrogram of each detection
+% 
+% Author: Alex Schoeny, Dr. John Spiesberger
+% 
+% Goal: Save an image of the spectrogram of each detection across all
+% receivers after the execution of the software package across a given set
+% of audio files
 
 function [] = save_detection_jpgs(rec_dict_tseries, pass_band, stop_band, ...
     corr_times, sig_intervals, freq_intervals, range_starts, range_ends)

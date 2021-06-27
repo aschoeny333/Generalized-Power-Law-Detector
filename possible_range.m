@@ -1,6 +1,6 @@
 % Time Range Containing a Signal on a Reference Receiver
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Using a detection on a reference receiver, the distance between
 % receivers, the speed of sound through water, clock bias measurements to

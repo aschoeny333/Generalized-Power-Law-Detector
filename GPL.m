@@ -1,6 +1,6 @@
 % Generalized Power Law Algorithm Implementation 
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Produce spectrograms with whitened background noise without losing
 % relative power and increasing visual clarity on spectrogram of sounds

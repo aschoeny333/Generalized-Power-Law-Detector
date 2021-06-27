@@ -1,6 +1,6 @@
 % Identify the noise bounds of the masked signal
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Loop through signals identified by detector and increment away from
 % either side of the signal bounds to determine noise bounds. Incrementing

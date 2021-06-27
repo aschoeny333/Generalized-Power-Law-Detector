@@ -1,6 +1,6 @@
 % Plot Associations of All Detections Across a Set of Receivers
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Plot the time bounds of all detections on a reference receiver, as
 % well as plotting the associations of each of those detections determined

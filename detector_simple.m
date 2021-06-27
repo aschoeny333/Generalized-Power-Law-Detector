@@ -1,5 +1,7 @@
 % Generalized Power Law Detector Implementation 
-% Author: Alex Schoeny 
+%
+% Author: Alex Schoeny, Dr. John Spiesberger
+%
 % Goal: Using manipulated spectrogram from GPL.m, identify time intervals
 % where a signal is detected 
 % 

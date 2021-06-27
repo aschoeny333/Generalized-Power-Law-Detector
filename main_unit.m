@@ -1,7 +1,7 @@
 % Identifying and Masking the Main Spectral Content Unit of a Single
 % Detected Signal
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Given the submatrix defined by the time bounds of a given detected
 % signal, where values below the threshold 5*mu_0 are set to 0, define a

@@ -1,6 +1,6 @@
 % GPL Test Statistic Matrix Determination Function
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Take the original Fourier matrix, the whitening vector determined
 % from whitener.m, and the exponential parameters gamma, v1, and v2, and

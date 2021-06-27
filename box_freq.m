@@ -1,6 +1,6 @@
 % Identify the frequency bounds of the masked signal
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Loop through elements of X_masked to find the lowest and highest
 % frequency bin attained by the signal. Basis for input into associator

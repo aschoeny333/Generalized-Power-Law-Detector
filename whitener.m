@@ -1,6 +1,6 @@
 % Conditional whitening vector determination function 
 %
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 %
 % Goal: Determine conditional whitening vector mu as defined by Helble et
 % al, as well as j_star (a vector containing the value of j^* as defined in

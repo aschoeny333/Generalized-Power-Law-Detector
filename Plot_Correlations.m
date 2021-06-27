@@ -1,6 +1,6 @@
 % Plot Correlations of a Signal Between Two Receivers
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: For a specific signal s and a specific receiver r, plot the
 % correlation values for times on r. Useful for debugging in associator.m.

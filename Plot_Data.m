@@ -1,6 +1,6 @@
 % Generalized Power Law Algorithm plotting with test statistics 
 %  
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Produce spectrograms of each major step of GPL implementation
 % alongside corresponding test statistic plots 

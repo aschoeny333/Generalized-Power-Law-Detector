@@ -1,6 +1,6 @@
 % Check Classes and Values of Input Parameters
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Ensure that the classes of input parameters are all valid. Where
 % possible, ensure that values of the parameters are also valid

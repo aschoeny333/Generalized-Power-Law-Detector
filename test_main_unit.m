@@ -1,6 +1,6 @@
 % Main Unit Testing
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Provide testing cases for main_unit.m
 % 

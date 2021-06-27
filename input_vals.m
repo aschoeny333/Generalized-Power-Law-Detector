@@ -1,6 +1,6 @@
  % Input Parameters to Run GPL.m as a Script
 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Provide a Matlab script to easily assign or change values to input
 % parameters of GPL.m, run the program, and save the results. See

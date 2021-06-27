@@ -1,6 +1,6 @@
 % Save Results of GPL Detector and Associator
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Provide a Matlab script to easily assign or change values of input
 % paramaters, run the program over multiple .wav files in a directory, and
@@ -32,9 +32,7 @@ associator_type = 2;
 num_receivers = 5;
 plot_GPL_data = 0;
 old_ts = 0; % Keep as false
-max_gap = 3;
-criteria = 1;
-combine_rule = 1;
+corr_type = 1;
 
 test_files = dir(fullfile(wav_dir, '*.wav'));
 if isempty(test_files)
@@ -55,7 +53,6 @@ for file = test_files'
         next_fnam(8) = num2str(i);
         rec_dict_tseries(i, :) = strcat(wav_dir, next_fnam);
     end
-    corr_type = 1;
     rec_dict_tseries = char(rec_dict_tseries);
     
     new_file = 1;
@@ -82,19 +79,8 @@ for file = test_files'
 
         disp('----- Associator -----');
         % Run Associator
-        if associator_type == 1
-            [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, ...
-                corr_type, intervals.t, filter_order, freq_intervals, wav_dir);
-        else
-            [corr_times, range_starts, range_ends, new_sig_intervals, new_freq_intervals, ...
-                new_noise_intervals] = associator_combining(rec_dict_tseries, ...
-                corr_type, intervals.t, filter_order, freq_intervals, wav_dir, noise_intervals.t, ...
-                max_gap, criteria, combine_rule);
-            
-            freq_intervals = new_freq_intervals;
-            intervals.t = new_sig_intervals;
-            noise_intervals.t = new_noise_intervals;
-        end
+        [corr_times, range_starts, range_ends] = associator(rec_dict_tseries, ...
+            corr_type, intervals.t, filter_order, freq_intervals, wav_dir);
 
         disp('----- Saving Results -----');
         % Save detector outputs and input parameters in a table

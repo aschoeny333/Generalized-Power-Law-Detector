@@ -1,6 +1,6 @@
 % Signal Associator
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: For each detection on a reference receiver, loop through other
 % receivers and use cross correlation to determine the start time of the

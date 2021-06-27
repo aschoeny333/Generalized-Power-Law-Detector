@@ -1,7 +1,7 @@
 % Identifying and Masking the Main Spectral Content Units of All Signals in
 % a Spectrogram
 %
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Goal: Given a noise threshold above a value determined by whitener.m.
 % Determine a binary matrix from values above and below the threshold and

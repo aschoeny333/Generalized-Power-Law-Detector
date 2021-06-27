@@ -1,6 +1,6 @@
 % Calculate the Great Circle Distance Between Receivers
 % 
-% Author: Alex Schoeny
+% Author: Alex Schoeny, Dr. John Spiesberger
 % 
 % Given the latitude and longitude giving the maximum possible distance
 % between two receivers, as calculated in possible_range.m, calculate the

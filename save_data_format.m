@@ -1,3 +1,11 @@
+% Save Data to Specified .txt File Format
+% 
+% Author: Alex Schoeny, Dr. John Spiesberger, Hita Gupta
+% 
+% Goal: After executing the software package on a given set of audio files,
+% save a .txt file for each detection in a specified format for use in Hita
+% Gupta's program to prepare inputs to Dr. Spiesberger's location program
+
 function [noise_intervals_start, noise_intervals_end] = save_data_format(corr_times, noise_intervals, rec_dict_tseries, ...
     t_bounds, pass_band, stop_band, filter_order, gamma, v1, v2, ...
     noise_thresh, max_noise_dur, min_noise_dur, sig_intervals, freq_intervals, wav_dir, old_ts)
